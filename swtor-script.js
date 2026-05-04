@@ -152,6 +152,8 @@ const elements = {
     rbBlocks: document.getElementById('rbBlocks'),
     rankingTiers: document.getElementById('rankingTiers'),
     charName: document.getElementById('charName'),
+    charRank: document.getElementById('charRank'),
+    charDesc: document.getElementById('charDesc'),
     //textSizeSlider: document.getElementById('textSizeSlider'),
     //sizeValue: document.getElementById('sizeValue')
 };
@@ -1027,7 +1029,7 @@ function updateStats() {
     });
 
     // Base HP (you had 2 before)
-    const baseHP = 2;
+    const baseHP = 3;
 
     renderStatBlocks(elements.hpBlocks, baseHP + hpTotal, 10, 'hp');
     renderStatBlocks(elements.rbBlocks, rbTotal, 10, 'rb');
@@ -1101,7 +1103,9 @@ function saveProfile() {
         },
         character: {
             name: elements.charName.value,
-          //  portrait: document.getElementById('portraitImg').src
+            description: elements.charDesc.value,
+            rank:elements.charRank.value,
+            portrait: document.getElementById('charPortrait').src
         },
         skills: state.skills.map(skill => ({
             id: skill.id,
@@ -1114,7 +1118,7 @@ function saveProfile() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'swtor-connected-skills.json';
+    a.download = `${profileData.character.name}.json`;
     a.click();
     URL.revokeObjectURL(url);
 }
@@ -1122,23 +1126,57 @@ function loadProfile(file) {
     const reader = new FileReader();
 
     reader.onload = (e) => {
-        const data = JSON.parse(e.target.result);
+        try {
+            const data = JSON.parse(e.target.result);
 
-        // Restore state
-        state.totalXP = data.state.totalXP;
-        state.spentXP = data.state.spentXP;
-        state.isLocked = data.state.isLocked;
+            // -------------------
+            // STATE RESTORE
+            // -------------------
+            state.totalXP = data.state?.totalXP ?? 0;
+            state.spentXP = data.state?.spentXP ?? 0;
+            state.isLocked = data.state?.isLocked ?? false;
 
-        // Restore skills
-        data.skills.forEach(savedSkill => {
-            const skill = state.skills.find(s => s.id === savedSkill.id);
-            if (skill) {
-                skill.rank = savedSkill.rank;
-                if (savedSkill.type) skill.type = savedSkill.type;
+            // -------------------
+            // CHARACTER DATA
+            // -------------------
+            if (data.character?.name) {
+                elements.charName.value = data.character.name;
+                document.getElementById('charNameFull').textContent = data.character.name;
             }
-        });
+            if (data.character?.portrait) {
+                document.getElementById('charPortrait').src = data.character.portrait;
+            }
+            if (data.character?.description) {
+                document.getElementById('charDesc').textContent = data.character.description;
+            }
+            if (data.character?.rank) {
+                document.getElementById('charRank').value = data.character.rank;
+            }
+            // -------------------
+            // SKILLS RESTORE
+            // -------------------
+            state.skills.forEach(skill => {
+                const saved = data.skills?.find(s => s.id === skill.id);
+                if (saved) {
+                    skill.rank = saved.rank ?? 0;
+                    if (saved.type) skill.type = saved.type;
+                } else {
+                    skill.rank = 0;
+                }
+            });
 
-        updateAll();
+            // -------------------
+            // FULL REBUILD (IMPORTANT)
+            // -------------------
+            recalculateXP();
+            updateAll();
+            renderSkillTree();
+            drawConnections();
+
+        } catch (err) {
+            console.error(err);
+            alert("Invalid or corrupted profile file.");
+        }
     };
 
     reader.readAsText(file);
@@ -1148,7 +1186,7 @@ function loadPortrait(input) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          //  document.getElementById('portraitImg').src = e.target.result;
+            document.getElementById('charPortrait').src = e.target.result;
         };
         reader.readAsDataURL(input.files[0]);
     }
@@ -1172,10 +1210,14 @@ function bindEvents() {
     document.getElementById('saveBtn').addEventListener('click', saveProfile);
     document.getElementById('undoBtn').addEventListener('click', undo);
 
-    document.getElementById('loadBtn').addEventListener('change', (e) => {
+    document.getElementById('loadBtn').addEventListener('click', () => {
+    document.getElementById('loadInput').click();
+        });
+document.getElementById('loadInput').addEventListener('change', (e) => {
     if (e.target.files.length > 0) {
         loadProfile(e.target.files[0]);
     }
+ 
 });
     
    // elements.textSizeSlider.addEventListener('input', updateLabelSizes);
@@ -1184,13 +1226,10 @@ function bindEvents() {
         elements.skillsLayer.addEventListener('scroll', () => drawConnections());
     }
     
-   /* document.getElementById('portraitImg').addEventListener('click', () => {
-       
-            document.getElementById('portraitUpload').click();
-       
-    });*/
-    
-    //document.getElementById('portraitUpload').addEventListener('change', (e) => loadPortrait(e.target));
+   document.getElementById('portraitUpload').addEventListener('change', (e) => {
+    loadPortrait(e.target);
+});
+ 
 }
 
 // Initialize
