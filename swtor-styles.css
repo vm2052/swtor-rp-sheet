@@ -1,0 +1,968 @@
+/* ============================================
+   SWTOR RP - Connected Skill Tree Stylesheet
+   ============================================ */
+
+:root {
+    --sw-blue: #00d4ff;
+    --sw-green: #3fff00;
+    --sw-red: #ff3c3c;
+    --sw-gold: #ffd700;
+    --sw-purple: #bf00ff;
+    --sw-white: #ffffff;
+    
+    --bg-primary: #06080c;
+    --bg-secondary: #0d1117;
+    --bg-tertiary: #161b22;
+    
+    --tier-1-color: #8b9dc3;
+    --tier-2-color: #4a90e2;
+    --tier-3-color: #7b68ee;
+    --tier-4-color: #daa520;
+    --tier-5-color: #ff4444;
+    
+    --skill-size: 1.2cm;
+    --sidebar-width: 280px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    background: var(--bg-primary);
+    color: var(--sw-blue);
+    font-family: 'Arial', 'Segoe UI', sans-serif;
+    overflow: hidden;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: 
+        radial-gradient(ellipse at 30% 20%, rgba(0, 212, 255, 0.03), transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(191, 0, 255, 0.03), transparent 50%),
+        var(--bg-primary);
+}
+
+/* ============ TOP UI BAR ============ */
+.top-ui {
+    background: rgba(74, 144, 226, 0.08); 
+    border-bottom: 2px solid var(--sw-blue);
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    flex-shrink: 0;
+    gap: 20px;
+}
+
+.tool-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tool-group.center {
+    flex: 1;
+    justify-content: center;
+}
+
+.character-quick-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.portrait-mini {
+    width: 45px;
+    height: 45px;
+    border: 2px solid var(--sw-blue);
+    border-radius: 5px;
+    overflow: hidden;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.portrait-mini img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.char-name-quick {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--sw-blue);
+    color: var(--sw-white);
+    font-size: 20px;
+    font-weight: bold;
+    padding: 5px 10px;
+    outline: none;
+    width: 250px;
+    text-shadow: 0 0 10px var(--sw-blue);
+}
+
+button {
+    background: var(--bg-secondary);
+    color: var(--sw-blue);
+    border: 1px solid var(--sw-blue);
+    padding: 6px 14px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background: var(--sw-blue);
+    color: #000;
+    border-color: var(--sw-white);
+    box-shadow: 0 0 12px var(--sw-blue);
+}
+
+.btn-primary {
+    background: var(--sw-blue);
+    color: #000;
+    border-color: var(--sw-white);
+}
+
+.btn-warning {
+    border-color: #ff9d00;
+    color: #ff9d00;
+}
+
+.btn-warning:hover {
+    background: #ff9d00;
+    color: #000;
+}
+
+.lock-btn.active {
+    background: #900;
+    color: white;
+    border-color: #ff5555;
+}
+
+.slider-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #aaa;
+}
+
+.slider-control input[type="range"] {
+    width: 70px;
+    height: 3px;
+    background: var(--bg-tertiary);
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+.slider-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--sw-blue);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 6px var(--sw-blue);
+}
+
+/* ============ MAIN CONTENT LAYOUT ============ */
+.main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Ranking overlay on the left */
+.ranking-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+
+    z-index: 3; /* behind skills */
+    pointer-events: none; /* don't block clicks */
+}
+.ranking-overlay::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 260px; /* your sidebar width */
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: -1;
+}
+/* XP Bar on left edge */
+.xp-vertical-edge {
+    width: 18px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: stretch;   /* 👈 IMPORTANT */
+    padding: 5px 2px;
+
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 5; /* make sure it's above */
+}
+.xp-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--sw-white);
+    text-shadow: 0 0 6px #000;
+
+    pointer-events: none;
+    white-space: nowrap;
+}
+.xp-track-edge {
+    width: 100%;
+    background: #000;
+    border: 1px solid var(--sw-blue);
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.xp-fill-edge {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: var(--sw-blue);
+    transition: height 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 0 6px var(--sw-blue);
+    z-index: 1;
+    
+}
+
+.xp-spent-edge {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: #004c63;
+    transition: height 0.3s ease;
+    z-index: 2;
+}
+
+/* Ranking Tiers */
+.ranking-tiers-full {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+}
+
+.tier-divider {
+ 
+    position: absolute;
+     left: 0;
+    display: flex;
+    align-items: center;
+     border-top: 1px dashed rgba(255,255,255,0.3);
+    width: 100%;
+}
+.tier-label {
+    position: absolute;
+    left: 5px;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #aaa;
+}
+.tier-divider::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    z-index: -1;
+}
+
+.tier-divider.tier-1::before { background: rgba(139, 157, 195, 0.08); }
+.tier-divider.tier-2::before { background: rgba(74, 144, 226, 0.08); }
+.tier-divider.tier-3::before { background: rgba(123, 104, 238, 0.08); }
+.tier-divider.tier-4::before { background: rgba(218, 165, 32, 0.08); }
+.tier-divider.tier-5::before { background: rgba(255, 68, 68, 0.08); }
+
+.tier-divider.tier-1 { background: rgba(139, 157, 195, 0.08); }
+.tier-divider.tier-2 { background: rgba(74, 144, 226, 0.08); }
+.tier-divider.tier-3 { background: rgba(123, 104, 238, 0.08); }
+.tier-divider.tier-4 { background: rgba(218, 165, 32, 0.08); }
+.tier-divider.tier-5 { background: rgba(255, 68, 68, 0.08); }
+
+.tier-divider.active {
+ 
+    border-color: gold;
+}
+
+.tier-divider-content {
+    width: 100%;
+    z-index: 2;
+}
+.tier-divider.active .tier-label {
+    color: gold;
+    font-weight: bold;
+}
+.tier-divider-label {
+    font-weight: bold;
+    font-size: 10px;
+    color: var(--sw-gold);
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.tier-divider-ranks {
+    font-size: 7px;
+    color: #888;
+    line-height: 1.3;
+}
+
+.tier-divider.active .tier-divider-ranks {
+    color: #bbb;
+}
+
+ 
+
+.tier-divider.tier-1 .tier-line { background: rgba(139, 157, 195, 0.15); }
+.tier-divider.tier-2 .tier-line { background: rgba(74, 144, 226, 0.15); }
+.tier-divider.tier-3 .tier-line { background: rgba(123, 104, 238, 0.15); }
+.tier-divider.tier-4 .tier-line { background: rgba(218, 165, 32, 0.15); }
+.tier-divider.tier-5 .tier-line { background: rgba(255, 68, 68, 0.15); }
+
+.tier-divider.active .tier-line {
+    opacity: 0.5;
+}
+
+.tier-divider.tier-1.active .tier-line { background: rgba(139, 157, 195, 0.3); }
+.tier-divider.tier-2.active .tier-line { background: rgba(74, 144, 226, 0.3); }
+.tier-divider.tier-3.active .tier-line { background: rgba(123, 104, 238, 0.3); }
+.tier-divider.tier-4.active .tier-line { background: rgba(218, 165, 32, 0.3); }
+.tier-divider.tier-5.active .tier-line { background: rgba(255, 68, 68, 0.3); }
+
+.tier-separator {
+    padding: 4px 10px;
+    font-size: 10px;
+    font-weight: bold;
+    color: var(--sw-gold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 8px;
+    display:none;
+}
+.skill-tier-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px; /* space between tiers */
+}
+
+.skill-tier-row {
+    display: flex;
+    justify-content: center;
+    margin: 6px 0; /* spacing between rows inside a tier */
+}
+
+.skill-grid-row {
+    display: grid;
+    grid-template-columns: repeat(20, 64px); /* fixed size */
+    gap: 14px;
+}
+.tier-separator:first-child {
+    margin-top: 0;
+    border-top: none;
+}
+
+/* ============ SKILL WORKSPACE ============ */
+.skill-workspace {
+    flex: 1;
+    position: relative;
+     z-index: 2;
+    overflow: hidden;
+    background: 
+        url('icons/swtor-bg.png') no-repeat center center;
+    background-size: cover;
+}
+
+.skill-workspace::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    pointer-events: none;
+}
+
+/* SVG Connections Layer */
+.connections-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.connections-svg path {
+    transition: all 0.3s ease;
+}
+
+.connections-svg path.active-connection {
+    stroke: var(--sw-gold);
+    stroke-width: 3;
+    stroke-dasharray: none;
+    filter: drop-shadow(0 0 4px var(--sw-gold));
+}
+
+/* Skills Layer */
+.skills-layer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: auto;
+    z-index: 2;
+    pointer-events: auto;
+}
+
+/* Hide default scrollbar */
+.skills-layer::-webkit-scrollbar {
+    display: none;
+}
+
+.skills-layer {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+/* Skill Grid Container */
+.skill-grid-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100%;
+}
+.skill-tree {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.tier-container {
+    display: flex;
+    flex-direction: column;
+    min-height: fit-content;
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.tier-header {
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.5);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.tier-rows {
+    display: flex;
+    flex-direction: column;
+    padding: 6px 0 12px 0;
+    gap: 6px;
+}
+.tier-desc {
+    font-size: 10px;
+    opacity: 0.7;
+    margin-top: 2px;
+}
+.tier-title {
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+.skill-row {
+    display: flex;
+    justify-content: center;
+    padding: 6px 0;
+}
+.tier-1 .tier-header { box-shadow: inset 0 0 10px rgba(139,157,195,0.15); }
+.tier-2 .tier-header { box-shadow: inset 0 0 10px rgba(74,144,226,0.15); }
+.tier-3 .tier-header { box-shadow: inset 0 0 10px rgba(123,104,238,0.15); }
+.tier-4 .tier-header { box-shadow: inset 0 0 10px rgba(218,165,32,0.15); }
+.tier-5 .tier-header { box-shadow: inset 0 0 10px rgba(255,68,68,0.15); }
+.tier-1 .tier-title { color: #8b9dc3; }
+.tier-2 .tier-title { color: #4a90e2; }
+.tier-3 .tier-title { color: #7b68ee; }
+.tier-4 .tier-title { color: #daa520; }
+.tier-5 .tier-title { color: #ff4444; }
+.tier-1 {
+    background: rgba(139, 157, 195, 0.06);
+}
+
+.tier-2 {
+    background: rgba(74, 144, 226, 0.06);
+}
+
+.tier-3 {
+    background: rgba(123, 104, 238, 0.06);
+}
+
+.tier-4 {
+    background: rgba(218, 165, 32, 0.06);
+}
+
+.tier-5 {
+    background: rgba(255, 68, 68, 0.06);
+}
+/* Each tier row matches sidebar height */
+.skill-tier-row {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 5px 20px;
+    transition: all 0.3s ease;
+    min-height: 0;
+}
+
+.skill-tier-row:last-child {
+    border-bottom: none;
+}
+
+.skill-tier-row.active-tier-row {
+    background: rgba(255, 255, 255, 0.02);
+    box-shadow: inset 0 0 30px rgba(255, 215, 0, 0.03);
+}
+
+ 
+
+.skill-cell {
+    position: relative;
+    width: var(--skill-size);
+    height: var(--skill-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Skill Nodes */
+.skill-node {
+    width: var(--skill-size);
+    height: var(--skill-size);
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    z-index: 5;
+    pointer-events: auto;
+}
+
+.skill-node:hover {
+    transform: scale(1.1);
+    z-index: 10;
+}
+
+.skill-node img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 18px #bf00ff; }
+    50% { box-shadow: 0 0 30px #bf00ff, 0 0 45px rgba(191, 0, 255, 0.4); }
+}
+/* Rank Styling */
+ 
+.skill-effects {
+    position: absolute;
+    bottom: 2px;
+    left: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    pointer-events: none;
+}
+
+.effect {
+    font-size: 10px;
+    padding: 1px 4px;
+    border-radius: 4px;
+    font-weight: bold;
+    background: rgba(0,0,0,0.7);
+    color: white;
+}
+
+.effect-xp {
+    color: #daa520;
+}
+
+.effect-hp {
+    color: #4dff88;
+}
+
+.effect-rb {
+    color: #ff4444;
+}
+.skill-label {
+    position: absolute;
+    top: calc(var(--skill-size));
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(var(--skill-size) * 1.6);
+    font-size: 9px;
+    color: var(--sw-white);
+    text-align: center;
+    word-wrap: break-word;
+    line-height: 1.1;
+    padding: 2px 3px;
+    border-radius: 2px;
+    pointer-events: none;
+}
+
+/* Prerequisite indicator */
+.skill-node.locked-skill {
+    opacity: 0.4;
+    filter: grayscale(80%);
+    cursor: not-allowed;
+}
+
+.skill-node.locked-skill:hover {
+    transform: none;
+}
+/* Tier glow */
+.tier-unlock-highlight {
+    animation: tierGlow 1.5s ease-out;
+}
+
+@keyframes tierGlow {
+    0%   { box-shadow: 0 0 0px gold; }
+    50%  { box-shadow: 0 0 30px gold; }
+    100% { box-shadow: 0 0 0px transparent; }
+}
+
+/* Skill flash */
+.skill-unlock-flash {
+    animation: skillFlash 1s ease-out;
+}
+
+@keyframes skillFlash {
+    0%   { transform: scale(1); box-shadow: 0 0 0px gold; }
+    50%  { transform: scale(1.15); box-shadow: 0 0 20px gold; }
+    100% { transform: scale(1); box-shadow: 0 0 0px transparent; }
+}
+/* ============ BOTTOM STATS FOOTER ============ */
+.stats-footer {
+    background: rgba(74, 144, 226, 0.08); 
+    border-top: 2px solid var(--sw-blue);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    backdrop-filter: blur(10px);
+    flex-shrink: 0;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stat-label {
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hp-label { color: var(--sw-green); }
+.rb-label { color: var(--sw-red); }
+
+.stat-blocks {
+    display: flex;
+    gap: 2px;
+}
+
+.stat-blocks .block {
+    width: 12px;
+    height: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.stat-blocks .block.hp-filled {
+    background: var(--sw-green);
+    box-shadow: 0 0 8px var(--sw-green);
+    border-color: transparent;
+}
+
+.stat-blocks .block.rb-filled {
+    background: var(--sw-red);
+    box-shadow: 0 0 8px var(--sw-red);
+    border-color: transparent;
+}
+
+.stat-blocks .block.empty {
+    background: rgba(255,255,255,0.05);
+}
+
+.xp-controls {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.xp-controls button {
+    padding: 5px 12px;
+    font-size: 11px;
+}
+
+.current-rank-display {
+    font-weight: bold;
+    color: var(--sw-gold);
+    font-size: 13px;
+    text-shadow: 0 0 8px var(--sw-gold);
+    min-width: 150px;
+    text-align: right;
+}
+.xp-sidebar {
+    width: 70px;
+    background: rgba(74, 144, 226, 0.08); 
+    border-right: 2px solid var(--sw-blue);
+    border-left: 2px solid var(--sw-blue);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 5px;
+    position: relative;
+}
+
+.xp-track {
+    flex: 1;
+    width: 12px;
+    background: #000;
+    border: 1px solid var(--sw-blue);
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.xp-fill {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: var(--sw-blue);
+    box-shadow: 0 0 10px var(--sw-blue);
+    transition: height 0.3s ease;
+}
+
+.xp-spent {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: rgba(0, 76, 99, 0.8);
+    transition: height 0.3s ease;
+}
+
+/* Tier markers */
+.xp-tiers {
+    position: absolute;
+    top: 10px;
+    bottom: 40px;
+    left: 0;
+    width: 100%;
+    pointer-events: none;
+}
+
+.xp-tier-marker {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    color: var(--sw-gold);
+    text-shadow: 0 0 4px black;
+}
+
+/* Position tiers (based on your thresholds) */
+.xp-tier-marker[data-tier="1"] { bottom: 15%; }
+.xp-tier-marker[data-tier="2"] { bottom: 35%; }
+.xp-tier-marker[data-tier="3"] { bottom: 60%; }
+.xp-tier-marker[data-tier="4"] { bottom: 85%; }
+.xp-tier-marker[data-tier="5"] { bottom: 100%; }
+
+.xp-value {
+    font-size: 11px;
+    color: var(--sw-white);
+    margin-top: 8px;
+    text-align: center;
+}
+/* Locked State */
+.locked .char-name-quick {
+    pointer-events: none;
+    border-bottom-color: transparent;
+}
+
+.character-sidebar {
+    width: var(--sidebar-width);
+    background: rgba(74, 144, 226, 0.06);
+    border-right: 2px solid var(--sw-blue);
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.char-portrait {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.portrait-wrapper {
+    width: 140px;
+    height: 140px;
+    border: 2px solid var(--sw-blue);
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,212,255,0.4);
+}
+
+.portrait-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.char-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.char-field label {
+    font-size: 15px;
+    color: var(--sw-gold);
+    letter-spacing: 1px;
+     text-shadow: 0 0 8px var(--sw-gold);
+}
+.char-field input#charRank {
+    text-shadow: 0 0 8px var(--sw-gold);
+}
+.char-field input,
+.char-field textarea {
+    background: rgba(123, 104, 238, 0.06);
+    border: 1px solid var(--sw-blue);
+    color: var(--sw-white);
+    padding: 6px;
+    font-size: 15px;
+    outline: none;
+}
+.portrait-wrapper:hover {
+    box-shadow: 0 0 20px var(--sw-blue);
+    transform: scale(1.02);
+    transition: 0.2s ease;
+}
+.char-field textarea {
+    resize: none;
+    height: 120px;
+}
+
+.char-field input:focus,
+.char-field textarea:focus {
+    box-shadow: 0 0 10px var(--sw-blue);
+}
+
+.char-stats {
+     
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.char-stats .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.char-stats .stat-label {
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.xp-mini .current-rank-display {
+    text-align: center;
+    font-size: 12px;
+}
+.skill-tooltip {
+    position: absolute;
+    transform: translateX(-150%);
+    width: 220px;
+    background: rgba(10, 10, 20, 0.95);
+    border: 1px solid gold;
+    border-radius: 10px;
+    padding: 10px;
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    pointer-events: none;
+    z-index: 9999;
+ 
+}
+
+.skill-tooltip img {
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    text-align: center;
+    margin-bottom: 6px;
+    display: block;
+    margin: auto;
+     
+}
+
+.skill-tooltip .title {
+    font-weight: bold;
+    color: gold;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.skill-tooltip .desc {
+    font-size: 12px;
+    opacity: 0.9;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}

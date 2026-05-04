@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SWTOR RP - Connected Skill Tree</title>
+<link rel="stylesheet" href="swtor-styles.css">
+</head>
+
+<body class="unlocked">
+
+<div class="app-container">
+
+<!-- ================= TOP BAR ================= -->
+<header class="top-ui">
+    <div class="tool-group left">
+        <button id="saveBtn" class="btn-primary">💾 SAVE PROFILE</button>
+        <button type="file" id="loadBtn">LOAD PROFILE </button>
+        
+        <button id="undoBtn" class="btn-warning">↩ UNDO</button>
+    </div>
+
+    <div class="tool-group center">
+        <input class="char-name-quick" id="charNameFull" value="CHARACTER SHEET">
+    </div>
+
+    <div class="tool-group right">
+        <button id="lockToggle" class="lock-btn active">🔓 UNLOCKED</button>
+    </div>
+</header>
+
+<!-- ================= MAIN ================= -->
+<div class="main-content">
+<aside class="character-sidebar">
+
+    <!-- Portrait -->
+    <div class="char-portrait">
+        <label for="portraitUpload" class="portrait-wrapper">
+            <img id="charPortrait" src="icons/default-portrait.png" alt="Character Portrait">
+        </label>
+        <input type="file" id="portraitUpload" accept="image/*" hidden>
+    </div>
+
+    <!-- Name -->
+    <div class="char-field">
+        <label>NAME</label>
+        <input type="text" id="charName" value="Character Name">
+    </div>
+
+    <!-- Rank -->
+    <div class="char-field">
+        <label>RANK</label>
+        <input type="text" id="charRank" value="Initiate">
+    </div>
+
+    <!-- Description -->
+    <div class="char-field description">
+        <label>DESCRIPTION</label>
+        <textarea id="charDesc">Write some information...</textarea>
+    </div>
+
+    <!-- STATS SECTION -->
+<div class="char-stats">
+
+    <div class="stat-item">
+        <span class="stat-label hp-label">HEALTH</span>
+        <div class="stat-blocks" id="hpBlocks"></div>
+    </div>
+
+    <div class="stat-item">
+        <span class="stat-label rb-label">ROLL BONUS</span>
+        <div class="stat-blocks" id="rbBlocks"></div>
+    </div>
+
+    <div class="stat-item xp-mini">
+        <span class="stat-label">XP</span>
+        <div id="xpValueDisplay" class="current-rank-display"></div>
+    </div>
+
+</div>
+
+</aside>
+    <!-- ================= SKILL AREA ================= -->
+    <main class="skill-workspace" id="skillWorkspace">
+            <div id="skillTooltip" class="skill-tooltip hidden"></div>
+        <svg class="connections-svg" id="connectionsSvg"></svg>
+
+        <!-- ================= SKILL TIERS ================= -->
+        <div class="skills-layer" id="skillsLayer">
+
+            <!-- TIER V -->
+            <div class="tier-container tier-5" data-tier="5">
+                
+                <div class="tier-header">
+                    <div class="tier-title">TIER V — HIGH COMMAND</div>
+                    <div class="tier-desc">Absolute authority, strategic dominance, and elite Force mastery.</div>
+                </div>
+
+                <div class="tier-rows"></div>
+            </div>
+
+            <!-- TIER IV -->
+            <div class="tier-container tier-4" data-tier="4">
+
+                <div class="tier-header">
+                    <div class="tier-title">TIER IV — LORD & COMMANDER</div>
+                    <div class="tier-desc">Advanced Force users, battlefield commanders, psychological warfare specialists.</div>
+                </div>
+
+                <div class="tier-rows"></div>
+            </div>
+
+            <!-- TIER III -->
+            <div class="tier-container tier-3" data-tier="3">
+
+                <div class="tier-header">
+                    <div class="tier-title">TIER III — OFFICER CORPS</div>
+                    <div class="tier-desc">Experienced operatives, tactical Force users, combat veterans.</div>
+                </div>
+
+                <div class="tier-rows"></div>
+            </div>
+
+            <!-- TIER II -->
+            <div class="tier-container tier-2" data-tier="2">
+
+                <div class="tier-header">
+                    <div class="tier-title">TIER II — ADVANCED TRAINING</div>
+                    <div class="tier-desc">Specialized operatives and trained military personnel.</div>
+                </div>
+
+                <div class="tier-rows"></div>
+            </div>
+
+            <!-- TIER I -->
+            <div class="tier-container tier-1" data-tier="1">
+
+                <div class="tier-header">
+                    <div class="tier-title">TIER I — BASIC TRAINING</div>
+                    <div class="tier-desc">Foundational skills for all characters.</div>
+                </div>
+
+                <div class="tier-rows"></div>
+            </div>
+
+        </div>
+
+    </main>
+<aside class="xp-sidebar">
+    
+    <div class="xp-track">
+        <div class="xp-fill" id="xpVerticalFill"></div>
+        <div class="xp-spent" id="xpVerticalSpent"></div>
+    </div>
+
+    <!-- Tier markers -->
+    <div class="xp-tiers" id="rankingTiers">
+        <div class="xp-tier-marker" data-tier="1">I</div>
+        <div class="xp-tier-marker" data-tier="2">II</div>
+        <div class="xp-tier-marker" data-tier="3">III</div>
+        <div class="xp-tier-marker" data-tier="4">IV</div>
+        <div class="xp-tier-marker" data-tier="5">V</div>
+    </div>
+
+    <div class="xp-value" id="xpValue">0 XP</div>
+
+</aside>
+
+
+</div>
+ 
+<!-- ================= FOOTER ================= -->
+<footer class="stats-footer">
+
+
+
+<!-- XP CONTROLS -->
+<div class="xp-controls">
+    <button id="gainXpBtn">+1 XP</button>
+    <button id="gain5XpBtn">+5 XP</button>
+    <button id="gain10XpBtn">+10 XP</button>
+
+    <button id="loseXpBtn">-1 XP</button>
+    <button id="lose5XpBtn">-5 XP</button>
+    <button id="lose10XpBtn">-10 XP</button>
+</div>
+
+</footer>
+
+<script src="swtor-script.js"></script>
+
+</div>
+</body>
+</html>
