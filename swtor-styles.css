@@ -379,13 +379,13 @@ button:hover {
 .skill-tier-row {
     display: flex;
     justify-content: center;
-    margin: 6px 0; /* spacing between rows inside a tier */
+    margin: 20px 0; /* spacing between rows inside a tier */
 }
 
 .skill-grid-row {
     display: grid;
-    grid-template-columns: repeat(20, 64px); /* fixed size */
-    gap: 14px;
+    grid-template-columns: repeat(40, 64px); /* fixed size */
+    gap: 20px;
 }
 .tier-separator:first-child {
     margin-top: 0;
@@ -479,11 +479,19 @@ button:hover {
 }
 
 .tier-header {
+     display: flex;
+      align-items: center;
     padding: 8px 12px;
     background: rgba(0,0,0,0.5);
     border-bottom: 1px solid rgba(255,255,255,0.08);
+    gap: 12px;
+    font-weight: bold;
 }
-
+.tier-ranks {
+    font-size: 0.85em;
+    opacity: 0.8;
+    font-weight: normal;
+}
 .tier-rows {
     display: flex;
     flex-direction: column;
@@ -503,7 +511,7 @@ button:hover {
 .skill-row {
     display: flex;
     justify-content: center;
-    padding: 6px 0;
+    padding: 16px 0;
 }
 .tier-1 .tier-header { box-shadow: inset 0 0 10px rgba(139,157,195,0.15); }
 .tier-2 .tier-header { box-shadow: inset 0 0 10px rgba(74,144,226,0.15); }
@@ -691,15 +699,17 @@ button:hover {
 
 .stat-item {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 10px;
+    justify-content: flex-end;
 }
 
 .stat-label {
     font-weight: bold;
-    font-size: 14px;
+    font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 1px;
+     margin-top: 6px;
 }
 
 .hp-label { color: var(--sw-green); }
@@ -746,7 +756,7 @@ button:hover {
 .current-rank-display {
     font-weight: bold;
     color: var(--sw-gold);
-    font-size: 13px;
+    font-size: 16px;
     text-shadow: 0 0 8px var(--sw-gold);
     min-width: 150px;
     text-align: right;
@@ -922,7 +932,7 @@ button:hover {
 
 .xp-mini .current-rank-display {
     text-align: center;
-    font-size: 12px;
+    font-size: 16px;
 }
 .skill-tooltip {
     position: absolute;
@@ -965,4 +975,48 @@ button:hover {
 
 .hidden {
     display: none;
+}
+.portrait-stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* columns */
+.stat-column {
+    display: flex;
+    flex-direction: column-reverse; /* fills upward visually */
+    gap: 3px;
+    height: 140px;
+    width: 14px;
+    justify-content: flex-start;
+}
+
+/* individual blocks */
+.stat-block {
+    width: 100%;
+    height: 10px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: all 0.2s ease;
+}
+
+/* HP styling */
+.hp-block.filled {
+    background: var(--sw-green);
+    box-shadow: 0 0 6px var(--sw-green);
+    border-color: transparent;
+}
+
+/* RB styling */
+.rb-block.filled {
+    background: var(--sw-red);
+    box-shadow: 0 0 6px var(--sw-red);
+    border-color: transparent;
+}
+
+/* portrait stays centered */
+.char-portrait {
+    margin: 0;
 }

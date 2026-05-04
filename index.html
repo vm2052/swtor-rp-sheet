@@ -20,10 +20,6 @@
       <!-- <button id="undoBtn" class="btn-warning">↩ UNDO</button>--> 
     </div>
 
-    <div class="tool-group center">
-        <label class="char-name-quick" id="charNameFull">CHARACTER SHEET</label>
-    </div>
-
     <div class="tool-group right">
         <button id="lockToggle" class="lock-btn active">🔓 UNLOCKED</button>
     </div>
@@ -34,13 +30,33 @@
 <aside class="character-sidebar">
 
     <!-- Portrait -->
+   <div class="portrait-stat-row">
+
+    <!-- HP (LEFT BLOCK COLUMN) -->
+      <div class="stat-item">
+        <div class="stat-column hp-column" id="hpVerticalBlocks"></div>
+        <span class="stat-label hp-label">HP</span>
+    </div>
+
+    <!-- PORTRAIT -->
     <div class="char-portrait">
         <label for="portraitUpload" class="portrait-wrapper">
-            <img id="charPortrait" src="icons/default-portrait.png" alt="Character Portrait">
+            <img id="charPortrait" src="icons/default-portrait.png">
         </label>
         <input type="file" id="portraitUpload" accept="image/*" hidden>
     </div>
 
+    <!-- RB (RIGHT BLOCK COLUMN) -->
+      <div class="stat-item">
+    
+    <div class="stat-column rb-column" id="rbVerticalBlocks"></div>
+      <span class="stat-label rb-label">RB</span>
+</div>
+</div>
+     <div class="stat-item xp-mini">
+ 
+        <div id="xpValueDisplay" class="current-rank-display"></div>
+    </div>
     <!-- Name -->
     <div class="char-field">
         <label>NAME</label>
@@ -59,8 +75,10 @@
         <textarea id="charDesc">Write some information...</textarea>
     </div>
 
+
+
     <!-- STATS SECTION -->
-<div class="char-stats">
+<!--<div class="char-stats"  >
 
     <div class="stat-item">
         <span class="stat-label hp-label">HEALTH</span>
@@ -77,7 +95,7 @@
         <div id="xpValueDisplay" class="current-rank-display"></div>
     </div>
 
-</div>
+</div>-->
 
 </aside>
     <!-- ================= SKILL AREA ================= -->

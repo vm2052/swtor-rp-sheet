@@ -6,15 +6,15 @@ const state = {
     isLocked: false,
     totalXP: 25,
     spentXP: 0,
-    maxXP: 100,
+    maxXP: 125,
     history: [],
     lastTier: 1,
     tiers: {
         1: { threshold: 0 },
-        2: { threshold: 25 },
-        3: { threshold: 40 },
-        4: { threshold: 60 },
-        5: { threshold: 80 }
+        2: { threshold: 30 },
+        3: { threshold: 55 },
+        4: { threshold: 75 },
+        5: { threshold: 100 }
     },
     
     // All skills defined with connections
@@ -70,8 +70,8 @@ const state = {
         { id: 'comms_warfare', tier: 2, icon: 'icons/comms_warfare.webp', rank: 0, type: 'rb', row: 5, col: 7,  label: 'Comms Warfare', connectsTo: ['remote_control'] },
         { id: 'stabilizing_care', tier: 2, icon: 'icons/stabilizing_care.png', rank: 0, type: 'rb', row: 5, col: 8,  label: 'Stabilizing Care', connectsTo: ['surgery'], description: 'This skill represents a character’s ability to stabilise others who are in a degrading and critical condition, such as through resuscitation, defibrillation, administration of life-saving drugs or treatments that prevent the individual from dying.' },
          { id: 'chemistry', tier: 2, icon: 'icons/chemistry.png', rank: 0, type: 'rb', row: 5, col: 9,  label: 'Chemistry', connectsTo: ['poisons'] },
-         { id: 'perception', tier: 2, icon: 'icons/perception.png', rank: 0, type: 'rb', row: 5, col: 10,  label: 'Perception', connectsTo: [], description: 'aka Insight: this skill represents a character’s ability to read the body language and expressions of others to gain insight into their motivations, intentions and honesty. It also aids in investigations and detecting details in the environment, helping to learn more about surroundings and the environment itself.' },
-          { id: 'manipulation', tier: 2, icon: 'icons/manipulation.webp', rank: 0, type: 'rb', row: 5, col: 13,  label: 'Manipulation', connectsTo: [] },
+         { id: 'perception', tier: 2, icon: 'icons/perception.png', rank: 0, type: 'rb', row: 5, col: 12,  label: 'Perception', connectsTo: [], description: 'aka Insight: this skill represents a character’s ability to read the body language and expressions of others to gain insight into their motivations, intentions and honesty. It also aids in investigations and detecting details in the environment, helping to learn more about surroundings and the environment itself.' },
+          { id: 'manipulation', tier: 2, icon: 'icons/manipulation.webp', rank: 0, type: 'rb', row: 5, col: 13,  label: 'Manipulation', connectsTo: ['psychological_warfare'] },
          { id: 'offense', tier: 2, icon: 'icons/offense.png', rank: 0, type: 'rb', row: 5, col: 14,  label: 'Offense', connectsTo: [] },
           { id: 'force_scream', tier: 2, icon: 'icons/force_scream.png', rank: 0, type: 'rb', row: 5, col: 15,  label: 'Force Scream', connectsTo: [] },
           { id: 'force_empathy', tier: 2, icon: 'icons/force_empathy.webp', rank: 0, type: 'rb', row: 5, col: 16,  label: 'Force Empathy', connectsTo: [] },
@@ -157,7 +157,13 @@ const elements = {
     //textSizeSlider: document.getElementById('textSizeSlider'),
     //sizeValue: document.getElementById('sizeValue')
 };
-
+    const RANKS  = {
+        1: ['Initiate', 'Acolyte', 'Trooper', 'Specialist'],
+        2: ['Sith Apprentice', 'Sith Neophyte', 'Sergeant', 'Ensign', 'Midshipman'],
+        3: ['Sith Castellan', 'Lieutenant', 'Captain', 'Navy Commander'],
+        4: ['Sith Lord', 'Major', 'Colonel', 'Navy Captain'],
+        5: ['High Lord', 'Darth', 'Moff', 'Governor', 'General', 'Admiral']
+    };
 // Initialize
 function init() {
     renderSkillTree();
@@ -291,7 +297,12 @@ function renderSkillTree() {
         // HEADER (this replaces overlay tiers)
         const header = document.createElement('div');
         header.className = 'tier-header';
-        header.textContent = `TIER ${tier}`;
+        const ranksForTier = RANKS[tier] || [];
+
+    header.innerHTML = `
+        <div class="tier-title">TIER ${tier}</div>
+        <div class="tier-ranks">${ranksForTier.join(' • ')}</div>
+`;
 
         const rowsWrapper = document.createElement('div');
         rowsWrapper.className = 'tier-rows';
@@ -1051,11 +1062,37 @@ function updateStats() {
 
     // Base HP (you had 2 before)
     const baseHP = 3;
+    renderVerticalBlocks(
+        document.getElementById('hpVerticalBlocks'),
+        baseHP + hpTotal,
+        10,
+        'hp'
+    );
 
+    renderVerticalBlocks(
+        document.getElementById('rbVerticalBlocks'),
+        rbTotal,
+        10,
+        'rb'
+    );
     renderStatBlocks(elements.hpBlocks, baseHP + hpTotal, 10, 'hp');
     renderStatBlocks(elements.rbBlocks, rbTotal, 10, 'rb');
 }
+function renderVerticalBlocks(container, filled, max, type) {
+    if (!container) return;
+    container.innerHTML = '';
 
+    for (let i = 0; i < max; i++) {
+        const block = document.createElement('div');
+        block.className = `stat-block ${type}-block`;
+
+        if (i < filled) {
+            block.classList.add('filled');
+        }
+
+        container.appendChild(block);
+    }
+}
 // Render stat blocks
 function renderStatBlocks(container, filled, max, type) {
     if (!container) return;
