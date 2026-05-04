@@ -922,7 +922,7 @@ function updateXPDisplay() {
     }
 
     // TOTAL XP (progress bar)
-    const totalPercent = (state.totalXP / state.maxXP) * 100;
+    const totalPercent = Math.round(((state.totalXP+1) / state.maxXP) * 100);
 
     if (elements.xpVerticalFill) {
         elements.xpVerticalFill.style.height = `${totalPercent}%`;
@@ -1208,7 +1208,7 @@ function bindEvents() {
     document.getElementById('lose5XpBtn').addEventListener('click', () => removeXP(5));
     document.getElementById('lose10XpBtn').addEventListener('click', () => removeXP(10));
     document.getElementById('saveBtn').addEventListener('click', saveProfile);
-    document.getElementById('undoBtn').addEventListener('click', undo);
+   // document.getElementById('undoBtn').addEventListener('click', undo);
 
     document.getElementById('loadBtn').addEventListener('click', () => {
     document.getElementById('loadInput').click();
