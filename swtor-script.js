@@ -56,8 +56,8 @@ const state = {
         { id: 'remote_control', tier: 3, icon: 'icons/remote_control.webp', row: 3, col: 7,  rank: 0, type: 'rb', label: 'Remote Control', connectsTo: [], description: 'This skill represents a character’s ability to access and control technological systems, such as that of droids or security networks remotely. ' },
         { id: 'surgery', tier: 3, icon: 'icons/surgery.webp', row: 3, col: 8,  rank: 0, type: 'rb', label: 'Surgery', connectsTo: ['bioengineering'] },
         { id: 'poisons', tier: 3, icon: 'icons/poisons.png', row: 3, col: 9,  rank: 0, type: 'rb', label: 'Poisons & Toxins', connectsTo: ['bioengineering'], description: 'This skill represents a character’s ability to formulate, handle and utilise poisonous and toxic substances safely to themselves and their allies inside and out of combat. This may also include the knowledge of how to counter, treat or cure the ill-effects of such substances.' },
-       
-        
+       { id: 'sorcery', tier: 3, icon: 'icons/sith_sorcery.png', row: 3, col: 13,  rank: 0, type: 'rb', label: 'Sorcery', connectsTo: [] },
+         { id: 'alchemy', tier: 3, icon: 'icons/sith_alchemy.png', row: 3, col: 14,  rank: 0, type: 'rb', label: 'Alchemy', connectsTo: [] },
         // TIER 2 - Advanced Training
       
         { id: 'shield', tier: 2, icon: 'icons/shield.webp', rank: 0, type: 'rb', row: 5, col: 0,  label: 'Shield', connectsTo: [], effects: { xp: -3, hp: +1 } },
@@ -114,7 +114,7 @@ const state = {
         { id: 'technology', tier: 1, icon: 'icons/technology.webp', row:8, col: 7, rank: 0, type: 'hp', label: 'Technology', connectsTo: [], description: 'This skill represents a character’s ability to use (and construct) various technological items, such as droids, communication arrays, security systems and other items. ' },
          { id: 'first_aid', tier: 1, icon: 'icons/first_aid.webp', row:7, col: 8, rank: 0, type: 'hp', label: 'First Aid', connectsTo: ['stabilizing_care'], description: 'This skill represents a character’s ability to perform the most basic checks and actions aimed at prolonging a character’s life in a critical situation, such as checking airways, the recovery position, the application and use of a tourniquet or medpack.' },
         { id: 'diagnostics', tier: 1, icon: 'icons/diagnostics.webp', row:8, col: 8, rank: 0, type: 'hp', label: 'Diagnostics', connectsTo: ['first_aid'], description: 'This skill represents a character’s ability to diagnose physical and mental ailments, either through the use of equipment such as bioscanners, or through inspection and professional knowledge.' },
-        { id: 'biology', tier: 1, icon: 'icons/first_aid.webp', row:7, col: 9, rank: 0, type: 'hp', label: 'Biology', connectsTo: ['chemistry'], description: 'This skill represents a character’s ability to understand the function of living things, including topics such as genetics and microscopic study. Medical knowledge is excluded.'  },
+        { id: 'biology', tier: 1, icon: 'icons/biology.webp', row:7, col: 9, rank: 0, type: 'hp', label: 'Biology', connectsTo: ['chemistry'], description: 'This skill represents a character’s ability to understand the function of living things, including topics such as genetics and microscopic study. Medical knowledge is excluded.'  },
        { id: 'cybernetics', tier: 1, icon: 'icons/cybernetics.png', row:8, rank: 0, col: 9, type: 'normal', label: 'Cybernetics', connectsTo: [], description: 'This skill represents a character’s ability to design and implement cybernetics into a living body. May also apply to the use of more complicated cybernetic functions. ' },
       
         { id: 'culture', tier: 1, icon: 'icons/culture.webp', row:7, col: 11, rank: 0, type: 'hp', label: 'Linguistics&History', connectsTo: ['diplomacy'], description: ' This skill represents a character’s ability to understand the norms and values of various cultures (inc. their own) as well as the character’s pre-existing knowledge of such. This can include: religious beliefs, cultural taboos, societal organisation and prejudices. The skill includes knowledge in History and Linguistics as well.' },
@@ -124,7 +124,7 @@ const state = {
         
         { id: 'interrogation', tier: 1, icon: 'icons/interrogation.webp', row:8,  col: 13, rank: 0, type: 'normal', label: 'Interrogation', connectsTo: ['intimidation'], description: 'This skill represents a character’s ability to get information out of an unwilling subject through various means, such as chemical influences, threats or torture.' },
           { id: 'intimidation', tier: 1, icon: 'icons/intimidation.webp', rank: 0, row: 7, col: 13,  type: 'rb', label: 'Intimidation', connectsTo: ['manipulation'], description: 'This skill represents a character’s ability to frighten or otherwise coerce others via demeanor, threat, or deliberate actions. ' },
-            { id: 'swords', tier: 1, icon: 'icons/swords.webp', row:7,  col: 14, rank: 0, type: 'normal', label: 'Swords', connectsTo: ['offense'] },
+            { id: 'swords', tier: 1, icon: 'icons/swords.webp', row:7,  col: 14, rank: 0, type: 'normal', label: 'Swords', connectsTo: ['offense', 'defense', 'maneuver'] },
           { id: 'mechu_deru', tier: 1, icon: 'icons/mechu_deru.webp', rank: 0, row: 8, col: 14,  type: 'rb', label: 'Mechu-Deru', connectsTo: [] },
            { id: 'force_pull', tier: 1, icon: 'icons/force_pull.png', row:7,  col: 15, rank: 0, type: 'normal', label: 'Force Pull', connectsTo: [] },
           { id: 'force_push', tier: 1, icon: 'icons/force_push.webp', rank: 0, row: 8, col: 15,  type: 'rb', label: 'Force Push', connectsTo: ['force_whirlwind'] },
