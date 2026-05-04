@@ -185,6 +185,18 @@ function getCurrentTier() {
 
     return 1;
 }
+function getMaxAllowedRank(skill) {
+    const prerequisites = state.skills.filter(s =>
+        s.connectsTo && s.connectsTo.includes(skill.id)
+    );
+
+    if (prerequisites.length === 0) return getMaxRank(skill);
+
+    // Find strongest parent
+    const bestParentRank = Math.max(...prerequisites.map(p => p.rank || 0));
+
+    return Math.min(getMaxRank(skill), bestParentRank);
+}
 function renderTierMarkers() {
     const container = elements.rankingTiers;
     container.innerHTML = '';
@@ -475,7 +487,10 @@ function handleSkillClick(skill) {
     const levelNames = ['Level 1 (White)', 'Level 2 (Green)', 'Level 3 (Blue)', 'Level 4 (Gold)', 'Level 5 (Purple)'];
     
     let cumulativeCost = 0;
+    const maxAllowed = getMaxAllowedRank(skill);
+
     for (let i = skill.rank + 1; i <= maxRank; i++) {
+    if (i > maxAllowed) break;
         if (i <= 4) {
             cumulativeCost += i;
         } else if (i === 5) {
@@ -544,7 +559,10 @@ function updateSkillLabel(label, skill) {
 // Cycle skill up one level
 function cycleSkillUp(skill, node) {
     const maxRank = getMaxRank(skill);
-    
+    const maxAllowed = getMaxAllowedRank(skill);
+
+   
+
     if (skill.rank >= maxRank) {
         // Already max, cycle back to 0
         cycleSkillToLevel(skill, node, 0);
@@ -564,7 +582,10 @@ function cycleSkillUp(skill, node) {
     const nextLevel = skill.rank + 1;
     const cost = getLevelCost(skill, skill.rank, nextLevel);
     const availableXP = state.totalXP - state.spentXP;
-    
+     if (nextLevel > maxAllowed) {
+        alert(`You must first upgrade the connected skill(s) to level ${nextLevel}.`);
+        return;
+    }
     if (availableXP < cost) {
         alert('Not enough XP! Need ' + cost + ' XP but only have ' + availableXP + ' XP available.');
         return;
