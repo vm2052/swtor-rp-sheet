@@ -36,7 +36,8 @@ body, html {
     background: var(--bg-primary);
     color: var(--sw-blue);
     font-family: 'Arial', 'Segoe UI', sans-serif;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .app-container {
@@ -384,7 +385,7 @@ button:hover {
 
 .skill-grid-row {
     display: grid;
-    grid-template-columns: repeat(40, 64px); /* fixed size */
+    grid-template-columns: repeat(auto-fit, minmax(var(--skill-size), 1fr));
     gap: 20px;
 }
 .tier-separator:first-child {
@@ -445,6 +446,7 @@ button:hover {
     overflow-x: auto;
     z-index: 2;
     pointer-events: auto;
+    touch-action: pan-x pan-y;
 }
 
 /* Hide default scrollbar */
@@ -846,6 +848,7 @@ button:hover {
     display: flex;
     flex-direction: column;
     align-content: center;
+    align-items: center;
     padding: 12px;
     gap: 15px;
     flex-shrink: 0;
@@ -895,6 +898,7 @@ button:hover {
     padding: 6px;
     font-size: 15px;
     outline: none;
+    
 }
 .portrait-wrapper:hover {
     box-shadow: 0 0 20px var(--sw-blue);
@@ -903,7 +907,8 @@ button:hover {
 }
 .char-field textarea {
     resize: none;
-    height: 120px;
+    height: 220px;
+    width:220px;
 }
 
 .char-field input:focus,
@@ -1020,4 +1025,108 @@ button:hover {
 /* portrait stays centered */
 .char-portrait {
     margin: 0;
+}
+.skill-legend {
+  
+    font-size: 16px;
+}
+
+.legend-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.legend-box {
+    width: 32px;
+    height: 32px;
+    border: 3px solid;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.4);
+    box-shadow: 0 0 8px currentColor;
+}
+@media (max-width: 768px) {
+
+    /* Stack layout instead of side-by-side */
+    .main-content {
+        flex-direction: column;
+    }
+
+    /* Sidebar becomes top panel */
+    .character-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 2px solid var(--sw-blue);
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* Portrait smaller */
+    .portrait-wrapper {
+        width: 90px;
+        height: 90px;
+    }
+
+    /* Reduce skill size */
+    :root {
+        --skill-size: 42px;
+    }
+
+    /* Reduce grid spacing */
+    .skill-grid-row {
+         grid-template-columns: repeat(auto-fit, minmax(var(--skill-size), 1fr));
+        gap: 10px;
+    }
+
+    /* Allow scrolling workspace */
+    .skills-layer {
+        overflow: auto;
+    }
+
+    /* Tier header more compact */
+    .tier-header {
+        font-size: 10px;
+        padding: 6px;
+    }
+
+    /* Top bar wraps */
+    .top-ui {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .char-name-quick {
+        width: 150px;
+        font-size: 14px;
+    }
+
+    /* Footer stacks */
+    .stats-footer {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    /* Tooltip fix for mobile */
+    .skill-tooltip {
+        transform: translateX(-50%);
+        left: 50%;
+        width: 180px;
+    }
+
+    /* XP sidebar becomes horizontal bar */
+    .xp-sidebar {
+        width: 100%;
+        height: 40px;
+        flex-direction: row;
+        border-left: none;
+        border-top: 2px solid var(--sw-blue);
+    }
+
+    .xp-track {
+        width: 100%;
+        height: 10px;
+    }
 }

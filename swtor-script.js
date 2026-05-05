@@ -56,8 +56,8 @@ const state = {
         { id: 'remote_control', tier: 3, icon: 'icons/remote_control.webp', row: 3, col: 7,  rank: 0, type: 'rb', label: 'Remote Control', connectsTo: [], description: 'This skill represents a character’s ability to access and control technological systems, such as that of droids or security networks remotely. ' },
         { id: 'surgery', tier: 3, icon: 'icons/surgery.webp', row: 3, col: 8,  rank: 0, type: 'rb', label: 'Surgery', connectsTo: ['bioengineering'] },
         { id: 'poisons', tier: 3, icon: 'icons/poisons.png', row: 3, col: 9,  rank: 0, type: 'rb', label: 'Poisons & Toxins', connectsTo: ['bioengineering'], description: 'This skill represents a character’s ability to formulate, handle and utilise poisonous and toxic substances safely to themselves and their allies inside and out of combat. This may also include the knowledge of how to counter, treat or cure the ill-effects of such substances.' },
-       { id: 'sorcery', tier: 3, icon: 'icons/sith_sorcery.png', row: 3, col: 13,  rank: 0, type: 'rb', label: 'Sorcery', connectsTo: [] },
-         { id: 'alchemy', tier: 3, icon: 'icons/sith_alchemy.png', row: 3, col: 14,  rank: 0, type: 'rb', label: 'Alchemy', connectsTo: [] },
+       { id: 'sorcery', tier: 3, icon: 'icons/sith_sorcery.png', row: 3, col: 14,  rank: 0, type: 'rb', label: 'Sorcery', connectsTo: [] },
+         { id: 'alchemy', tier: 3, icon: 'icons/sith_alchemy.png', row: 3, col: 19,  rank: 0, type: 'rb', label: 'Alchemy', connectsTo: [] },
         // TIER 2 - Advanced Training
       
         { id: 'shield', tier: 2, icon: 'icons/shield.webp', rank: 0, type: 'rb', row: 5, col: 0,  label: 'Shield', connectsTo: [], effects: { xp: -3, hp: +1 } },
@@ -168,6 +168,7 @@ const elements = {
 function init() {
     renderSkillTree();
     renderTierMarkers();
+    renderSkillLegend();
     updateAll();
     bindEvents();
     state.lastTier = getCurrentTier();
@@ -563,7 +564,7 @@ function updateSkillLabel(label, skill) {
     };
     
     const currentLevel = skill.rank || 0;
-    label.textContent = skill.label + ' [' + currentLevel + ']';
+    label.textContent = skill.label;
     label.style.color = levelColors[currentLevel] || '#ffffff';
 }
 
@@ -1289,6 +1290,31 @@ document.getElementById('loadInput').addEventListener('change', (e) => {
 });
  
 }
+function renderSkillLegend() {
+    const container = document.getElementById('skillLegend');
+    if (!container) return;
 
+    const levels = [
+        { level: 'I', color: '#ffffff'},
+        { level: 'II', color: '#3fff00' },
+        { level: 'III', color: '#1e90ff'},
+        { level: 'IV', color: '#ffd700' },
+        { level: 'V', color: '#bf00ff' }
+    ];
+
+    container.innerHTML = '';
+
+    levels.forEach(lvl => {
+        const row = document.createElement('div');
+        row.className = 'legend-row';
+
+        row.innerHTML = `
+            <div class="legend-box" style="border-color:${lvl.color}"></div>
+            <span> — LEVEL ${lvl.level}</span>
+        `;
+
+        container.appendChild(row);
+    });
+}
 // Initialize
 document.addEventListener('DOMContentLoaded', init);
