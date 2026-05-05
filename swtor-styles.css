@@ -402,6 +402,7 @@ button:hover {
     background: 
         url('icons/swtor-bg.png') no-repeat center center;
     background-size: cover;
+     touch-action: pan-x pan-y;
 }
 
 .skill-workspace::before {

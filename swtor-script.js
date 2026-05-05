@@ -392,8 +392,7 @@ function createSkillNode(skill) {
     
     const img = document.createElement('img');
     img.src = skill.icon;
-    img.alt = skill.label;
-    img.onerror = function() { this.src = 'icons/skills/default-skill.png'; };
+    img.alt = skill.label; 
     node.appendChild(img);
 
     if (skill.effects) {
@@ -1316,6 +1315,26 @@ function renderSkillLegend() {
         container.appendChild(row);
     });
 }
- 
+ document.getElementById("downloadPngBtn").addEventListener("click", () => {
+    const element = document.querySelector(".app-container");
+        document.querySelector(".top-ui").style.display = "none";
+       
+    html2canvas(element, {
+        backgroundColor: "#06080c", // match your theme
+        scale: 2, // higher = better quality
+        useCORS: true,
+         scrollX: 0,
+          allowTaint: false,
+        scrollY: -window.scrollY,
+        windowWidth: document.body.scrollWidth,
+        windowHeight: document.body.scrollHeight
+    }).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "swtor-character.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    });
+     document.querySelector(".top-ui").style.display = "flex";
+});
 // Initialize
 document.addEventListener('DOMContentLoaded', init);
