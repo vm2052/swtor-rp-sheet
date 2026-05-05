@@ -1315,57 +1315,6 @@ function renderSkillLegend() {
         container.appendChild(row);
     });
 }
-document.getElementById("downloadPngBtn").addEventListener("click", async () => {
-
-    const original = document.querySelector(".app-container");
-    const topUI = document.querySelector(".top-ui");
-
-    // Hide UI
-    topUI.style.display = "none";
-
-    // Clone entire layout
-    const clone = original.cloneNode(true);
-
-    // Put clone off-screen
-    clone.style.position = "absolute";
-    clone.style.left = "-99999px";
-    clone.style.top = "0";
-    clone.style.width = original.scrollWidth + "px";
-    clone.style.height = "auto";
-    clone.style.overflow = "visible";
-
-    document.body.appendChild(clone);
-
-    // 🚨 IMPORTANT: disable scrolling inside clone
-    const skillsLayer = clone.querySelector(".skills-layer");
-    skillsLayer.style.overflow = "visible";
-    skillsLayer.style.height = "auto";
-    skillsLayer.style.maxHeight = "none";
-
-    // Also force tiers to expand fully
-    clone.querySelectorAll(".tier-container").forEach(el => {
-        el.style.height = "auto";
-    });
-
-    await new Promise(r => requestAnimationFrame(r));
-
-    html2canvas(clone, {
-        backgroundColor: "#06080c",
-        scale: 2,
-        useCORS: true,
-        scrollX: 0,
-        scrollY: 0
-    }).then(canvas => {
-
-        const link = document.createElement("a");
-        link.download = "swtor-character.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-
-        // cleanup
-        document.body.removeChild(clone);
-        topUI.style.display = "flex";
-    });
-});
+ 
 // Initialize
 document.addEventListener('DOMContentLoaded', init);
