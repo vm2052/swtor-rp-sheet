@@ -1316,35 +1316,45 @@ function renderSkillLegend() {
     });
 }
 document.getElementById("downloadPngBtn").addEventListener("click", async () => {
-    const element = document.querySelector(".app-container");
-    const topUI = document.querySelector(".top-ui");
-    const skillsLayer = document.querySelector(".skills-layer");
 
-    // Save original styles
-    const originalOverflow = skillsLayer.style.overflow;
-    const originalHeight = skillsLayer.style.height;
+    const original = document.querySelector(".app-container");
+    const topUI = document.querySelector(".top-ui");
 
     // Hide UI
     topUI.style.display = "none";
 
-    // FORCE FULL EXPANSION
-    const fullHeight = skillsLayer.scrollHeight;
-    const fullWidth = skillsLayer.scrollWidth;
+    // Clone entire layout
+    const clone = original.cloneNode(true);
 
+    // Put clone off-screen
+    clone.style.position = "absolute";
+    clone.style.left = "-99999px";
+    clone.style.top = "0";
+    clone.style.width = original.scrollWidth + "px";
+    clone.style.height = "auto";
+    clone.style.overflow = "visible";
+
+    document.body.appendChild(clone);
+
+    // 🚨 IMPORTANT: disable scrolling inside clone
+    const skillsLayer = clone.querySelector(".skills-layer");
     skillsLayer.style.overflow = "visible";
-    skillsLayer.style.height = fullHeight + "px";
+    skillsLayer.style.height = "auto";
     skillsLayer.style.maxHeight = "none";
 
-    // Wait 1 frame so layout updates
+    // Also force tiers to expand fully
+    clone.querySelectorAll(".tier-container").forEach(el => {
+        el.style.height = "auto";
+    });
+
     await new Promise(r => requestAnimationFrame(r));
 
-    html2canvas(element, {
+    html2canvas(clone, {
         backgroundColor: "#06080c",
         scale: 2,
         useCORS: true,
-        allowTaint: false,
-        windowWidth: fullWidth,
-        windowHeight: element.scrollHeight
+        scrollX: 0,
+        scrollY: 0
     }).then(canvas => {
 
         const link = document.createElement("a");
@@ -1352,11 +1362,9 @@ document.getElementById("downloadPngBtn").addEventListener("click", async () => 
         link.href = canvas.toDataURL("image/png");
         link.click();
 
-        // Restore UI
+        // cleanup
+        document.body.removeChild(clone);
         topUI.style.display = "flex";
-        skillsLayer.style.overflow = originalOverflow;
-        skillsLayer.style.height = originalHeight;
-        skillsLayer.style.maxHeight = "";
     });
 });
 // Initialize
