@@ -1315,26 +1315,49 @@ function renderSkillLegend() {
         container.appendChild(row);
     });
 }
- document.getElementById("downloadPngBtn").addEventListener("click", () => {
+document.getElementById("downloadPngBtn").addEventListener("click", async () => {
     const element = document.querySelector(".app-container");
-        document.querySelector(".top-ui").style.display = "none";
-       
+    const topUI = document.querySelector(".top-ui");
+    const skillsLayer = document.querySelector(".skills-layer");
+
+    // Save original styles
+    const originalOverflow = skillsLayer.style.overflow;
+    const originalHeight = skillsLayer.style.height;
+
+    // Hide UI
+    topUI.style.display = "none";
+
+    // FORCE FULL EXPANSION
+    const fullHeight = skillsLayer.scrollHeight;
+    const fullWidth = skillsLayer.scrollWidth;
+
+    skillsLayer.style.overflow = "visible";
+    skillsLayer.style.height = fullHeight + "px";
+    skillsLayer.style.maxHeight = "none";
+
+    // Wait 1 frame so layout updates
+    await new Promise(r => requestAnimationFrame(r));
+
     html2canvas(element, {
-        backgroundColor: "#06080c", // match your theme
-        scale: 2, // higher = better quality
+        backgroundColor: "#06080c",
+        scale: 2,
         useCORS: true,
-         scrollX: 0,
-          allowTaint: false,
-        scrollY: -window.scrollY,
-        windowWidth: document.body.scrollWidth,
-        windowHeight: document.body.scrollHeight
+        allowTaint: false,
+        windowWidth: fullWidth,
+        windowHeight: element.scrollHeight
     }).then(canvas => {
+
         const link = document.createElement("a");
         link.download = "swtor-character.png";
         link.href = canvas.toDataURL("image/png");
         link.click();
+
+        // Restore UI
+        topUI.style.display = "flex";
+        skillsLayer.style.overflow = originalOverflow;
+        skillsLayer.style.height = originalHeight;
+        skillsLayer.style.maxHeight = "";
     });
-     document.querySelector(".top-ui").style.display = "flex";
 });
 // Initialize
 document.addEventListener('DOMContentLoaded', init);
