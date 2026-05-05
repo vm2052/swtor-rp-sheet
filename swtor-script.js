@@ -9,6 +9,8 @@ const state = {
     maxXP: 125,
     history: [],
     lastTier: 1,
+    customSkill: null, // stores the created skill
+    customSkillUsed: false,
     tiers: {
         1: { threshold: 0 },
         2: { threshold: 30 },
@@ -16,6 +18,7 @@ const state = {
         4: { threshold: 75 },
         5: { threshold: 100 }
     },
+    
     
     // All skills defined with connections
     skills: [
@@ -164,6 +167,12 @@ const elements = {
         4: ['Sith Lord', 'Major', 'Colonel', 'Navy Captain'],
         5: ['High Lord', 'Darth', 'Moff', 'Governor', 'General', 'Admiral']
     };
+    const customSkillEls = {
+    icon: document.getElementById("customSkillIcon"),
+    name: document.getElementById("customSkillName"),
+    empty: document.getElementById("skillSlotEmpty"),
+    filled: document.getElementById("skillSlotFilled")
+};
 // Initialize
 function init() {
     renderSkillTree();
@@ -172,6 +181,8 @@ function init() {
     updateAll();
     bindEvents();
     state.lastTier = getCurrentTier();
+    skillSlotEmpty.style.display = "none";
+    customChoiceStatus.style.display = "none";
 }
 function getMaxRank(skill) {
     if (skill.id === 'force_maelstrom') return 5;
@@ -884,18 +895,26 @@ function showSkillMenu(skill) {
 function recalculateXP() {
     let spent = 0;
 
+    // normal skills
     state.skills.forEach(skill => {
         const rank = skill.rank || 0;
 
-         
-        // CASE 2: normal skills -> rank cost system
         for (let i = 1; i <= rank; i++) {
             if (i <= 4) spent += 1;
             else spent += 2;
         }
-
-         
     });
+
+    // custom skill (separate system)
+    if (state.customSkill) {
+        const s = state.customSkill;
+
+        for (let i = 1; i <= s.rank; i++) {
+            if (i <= 2) spent = 0; // starting investment
+            else if (i <= 4) spent += 1;
+            else spent += 2;
+        }
+    }
 
     state.spentXP = spent;
 }
@@ -1315,6 +1334,189 @@ function renderSkillLegend() {
         container.appendChild(row);
     });
 }
- 
+
+ function createCustomSkill() {
+    const name = prompt("Name your custom skill:");
+    if (!name) return;
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+
+    input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+
+            state.customSkill = {
+                id: "custom",
+                label: name,
+                icon: event.target.result,
+                rank: 1,        // starts already invested (2 XP equivalent)
+                xpInvested: 2,
+                maxRank: 5
+            };
+
+            state.customSkillUsed = true;
+            state.customSkill.rank = 2;
+            renderCustomSkill();
+            lockCustomChoice("skill");
+        };
+
+        reader.readAsDataURL(file);
+    };
+
+    input.click();
+}
+function setCustomChoiceDisplay(type) {
+    const box = document.getElementById("customChoiceStatus");
+    const text = document.getElementById("customChoiceText");
+
+    if (!box || !text) return;
+
+    box.style.display = "flex";
+
+    if (type === "xp") {
+        text.textContent = "Choice locked: +2 XP gained";
+    }
+
+    if (type === "skill") {
+        text.textContent = "Choice locked: Custom Skill created";
+    }
+}
+function lockCustomChoice(type) {
+    state.customSkillUsed = true;
+
+    const btn = document.getElementById("xpOrSkillBtn");
+    if (btn) btn.style.display = "none";
+
+    const status = document.createElement("div");
+    status.className = "custom-choice-status";
+
+    if (type === "xp") {
+        status.textContent = "Choice locked: +2 XP gained";
+    } else {
+        status.textContent = "Choice locked: Custom skill created";
+    }
+
+    //document.querySelector(".character-sidebar").appendChild(status);
+}
+function renderCustomSkill() {
+    const icon = document.getElementById("customSkillIcon");
+    const name = document.getElementById("customSkillName");
+    const slot = document.getElementById("skillSlotFilled");
+    const empty = document.getElementById("skillSlotEmpty");
+
+    if (!state.customSkill) return;
+
+    const skill = state.customSkill;
+    
+
+    icon.src = skill.icon;
+    name.textContent = `${skill.label}`;
+
+    // 🎨 LEVEL FRAME
+    const levelColors = {
+        1: '#ffffff',
+        2: '#3fff00',
+        3: '#1e90ff',
+        4: '#ffd700',
+        5: '#bf00ff'
+    };
+
+    icon.style.border = `3px solid ${levelColors[skill.rank]}`;
+    icon.style.boxShadow = `0 0 10px ${levelColors[skill.rank]}`;
+
+    empty.classList.add("hidden");
+    slot.classList.remove("hidden");
+
+    slot.onclick = (e) => {
+    if (e.target.id === "removeSkillBtn") return;
+     upgradeCustomSkill();
+    };
+}
+function upgradeCustomSkill() {
+    const skill = state.customSkill;
+    if (!skill) return;
+
+    const maxRank = skill.maxRank;
+    const availableXP = state.totalXP - state.spentXP;
+
+    if (skill.rank >= maxRank) {
+        skill.rank = 1;
+    }
+
+    const nextLevel = skill.rank + 1;
+
+    // same cost system as your tree
+    let cost = 0;
+    for (let i = skill.rank + 1; i <= nextLevel; i++) {
+        cost += (i <= 4) ? 1 : 2;
+    }
+
+    if (availableXP < cost) {
+        alert("Not enough XP!");
+        return;
+    }
+
+    saveHistory();
+
+    skill.rank++;
+    updateAll();
+    renderCustomSkill();
+}
+    function gainCustomXP() {
+        saveHistory();
+        state.totalXP += 2;
+        state.customSkillUsed = true;
+        updateAll();
+    } 
+ document.getElementById("xpOrSkillBtn").addEventListener("click", () => {
+    if (state.customSkillUsed) {
+        alert("You already made this choice.");
+        return;
+    }
+
+    const choice = confirm(
+        "Choose your reward:\n\n" +
+        "OK = Gain +2 XP\n" +
+        "Cancel = Create Custom Skill"
+    );
+
+    if (choice) {
+        gainCustomXP();
+        setCustomChoiceDisplay("xp");
+        // ✅ CALL HERE
+        lockCustomChoice("xp");
+
+    } else {
+        createCustomSkill();
+        setCustomChoiceDisplay("skill");
+        
+    }
+});
+function removeCustomSkill() {
+    if (!state.customSkill) return;
+
+    if (!confirm("Remove custom skill? You will lose invested XP.")) return;
+
+    saveHistory();
+
+    state.customSkill = null;
+
+    document.getElementById("skillSlotFilled").classList.add("hidden");
+    document.getElementById("skillSlotEmpty").classList.remove("hidden");
+    document.getElementById("xpOrSkillBtn").style.display = "flex";
+    state.customSkillUsed = false;
+
+    updateAll();
+}
+document.getElementById("removeSkillBtn").onclick = (e) => {
+    e.stopPropagation(); // 🔥 THIS FIXES YOUR BUG
+    removeCustomSkill();
+};
 // Initialize
 document.addEventListener('DOMContentLoaded', init);

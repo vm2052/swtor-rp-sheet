@@ -35,27 +35,52 @@
     <!-- Portrait -->
    <div class="portrait-stat-row">
 
-    <!-- HP (LEFT BLOCK COLUMN) -->
-      <div class="stat-item">
-        <div class="stat-column hp-column" id="hpVerticalBlocks"></div>
-        <span class="stat-label hp-label">HP</span>
-    </div>
+     <!-- HP (LEFT BLOCK COLUMN) -->
+        <div class="stat-item">
+            <div class="stat-column hp-column" id="hpVerticalBlocks"></div>
+            <span class="stat-label hp-label">HP</span>
+        </div>
 
-    <!-- PORTRAIT -->
-    <div class="char-portrait">
-        <label for="portraitUpload" class="portrait-wrapper">
-            <img id="charPortrait" src="icons/default-portrait.png"  >
-        </label>
-        <input type="file" id="portraitUpload" accept="image/*" hidden>
-    </div>
-
-    <!-- RB (RIGHT BLOCK COLUMN) -->
-      <div class="stat-item">
+      <!-- PORTRAIT -->
+        <div class="char-portrait">
+            <label for="portraitUpload" class="portrait-wrapper">
+                <img id="charPortrait" src="icons/default-portrait.png"  >
+            </label>
+            <input type="file" id="portraitUpload" accept="image/*" hidden>
+        </div>
     
-    <div class="stat-column rb-column" id="rbVerticalBlocks"></div>
-      <span class="stat-label rb-label">RB</span>
+      <!-- RB (RIGHT BLOCK COLUMN) -->
+        <div class="stat-item">
+        
+            <div class="stat-column rb-column" id="rbVerticalBlocks"></div>
+            <span class="stat-label rb-label">RB</span>
+            </div>
+
+    </div>
+    <div class="custom-skill-slot" id="customSkillSlot">
+
+    <div class="skill-slot-empty" id="skillSlotEmpty">
+        EMPTY SLOT
+    </div>
+
+    <div class="skill-slot-filled hidden" id="skillSlotFilled">
+
+        <div class="skill-icon-wrapper">
+            <img id="customSkillIcon" />
+            <button id="removeSkillBtn">✕</button>
+        </div>
+
+        <div id="customSkillName" class="skill-name"></div>
+
+    </div>
+    <div class="custom-choice-status" id="customChoiceStatus">
+    <div id="customChoiceText"></div>
 </div>
+ <button id="xpOrSkillBtn" class="btn-primary">
+    +2 XP / CREATE SKILL
+</button>
 </div>
+
      <div class="stat-item xp-mini">
  
         <div id="xpValueDisplay" class="current-rank-display"></div>
@@ -80,26 +105,7 @@
         <div id="skillLegend" class="skill-legend"></div>
 
 
-    <!-- STATS SECTION -->
-<!--<div class="char-stats"  >
-
-    <div class="stat-item">
-        <span class="stat-label hp-label">HEALTH</span>
-        <div class="stat-blocks" id="hpBlocks"></div>
-    </div>
-
-    <div class="stat-item">
-        <span class="stat-label rb-label">ROLL BONUS</span>
-        <div class="stat-blocks" id="rbBlocks"></div>
-    </div>
-
-    <div class="stat-item xp-mini">
-        <span class="stat-label">XP</span>
-        <div id="xpValueDisplay" class="current-rank-display"></div>
-    </div>
-
-</div>-->
-
+     
 </aside>
     <!-- ================= SKILL AREA ================= -->
     <main class="skill-workspace" id="skillWorkspace">
