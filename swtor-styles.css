@@ -846,14 +846,18 @@ button:hover {
     background: rgba(74, 144, 226, 0.06);
     border-right: 2px solid var(--sw-blue);
     display: flex;
+  
     flex-direction: column;
     align-content: center;
     align-items: center;
     padding: 12px;
     gap: 15px;
     flex-shrink: 0;
+ 
 }
-
+ .character-sidebar.open {
+        transform: translateX(0);
+    }
 .char-portrait {
     display: flex;
     justify-content: center;
@@ -1054,15 +1058,40 @@ button:hover {
     }
 
     /* Sidebar becomes top panel */
-    .character-sidebar {
+  .character-sidebar {
         width: 100%;
-        border-right: none;
-        border-bottom: 2px solid var(--sw-blue);
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
+        max-height: 160px;
+        overflow-y: auto;
+        padding: 8px;
+        gap: 8px;
+    }
+  .character-sidebar.open {
+        transform: translateX(0);
+    }
+    .character-sidebar::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s;
+}
+ .char-field {
+        width: 45%; /* split fields */
     }
 
+    .description {
+        width: 100%; /* full width */
+    }
+
+.character-sidebar.open::after {
+    opacity: 1;
+    pointer-events: auto;
+}
     /* Portrait smaller */
     .portrait-wrapper {
         width: 90px;

@@ -1316,5 +1316,6 @@ function renderSkillLegend() {
         container.appendChild(row);
     });
 }
+ 
 // Initialize
 document.addEventListener('DOMContentLoaded', init);
