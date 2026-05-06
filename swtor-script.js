@@ -80,7 +80,7 @@ const state = {
           { id: 'force_scream', tier: 2, icon: 'icons/force_scream.png', rank: 0, type: 'rb', row: 5, col: 15,  label: 'Force Scream', connectsTo: [] },
           { id: 'force_empathy', tier: 2, icon: 'icons/force_empathy.webp', rank: 0, type: 'rb', row: 5, col: 16,  label: 'Force Empathy', connectsTo: [] },
           { id: 'force_lightning', tier: 2, icon: 'icons/force_lightning.png', rank: 0, type: 'rb', row: 5, col: 17,  label: 'Force Lightning', connectsTo: ['force_tempest'] },
-          { id: 'force_deflect', tier: 2, icon: 'icons/force_lightning.png', rank: 0, type: 'rb', row: 5, col: 18,  label: 'Force Deflect', connectsTo: ['force_bubble'] },
+          { id: 'force_deflect', tier: 2, icon: 'icons/force_deflect.jpg', rank: 0, type: 'rb', row: 5, col: 18,  label: 'Force Deflect', connectsTo: ['force_bubble'] },
            { id: 'force_slow', tier: 2, icon: 'icons/force_slow.webp', rank: 0, type: 'rb', row: 5, col: 19,  label: 'Force Slow', connectsTo: ['force_stun'] },
 
 
