@@ -883,6 +883,7 @@ button:hover {
     object-fit: cover;
 }
 
+
 .char-field {
     display: flex;
     flex-direction: column;
@@ -1015,14 +1016,32 @@ button:hover {
     border: 1px solid rgba(255,255,255,0.15);
     transition: all 0.2s ease;
 }
+.rb-gain {
+    color: #ff3b3b;
+    margin-left: 1px;
+    font-weight: normal;
 
+    text-shadow:
+        0 0 2px #ff3b3b,
+        0 0 4px #ff0000,
+        0 0 8px rgba(255, 0, 0, 0.6);
+}
 /* HP styling */
 .hp-block.filled {
     background: var(--sw-green);
     box-shadow: 0 0 6px var(--sw-green);
     border-color: transparent;
 }
+.xp-cost {
+    color: #ffd700;
+    margin-left: 2px;
+    font-weight: normal;
 
+    text-shadow:
+        0 0 2px #ffd700,
+        0 0 4px #ffd700,
+        0 0 8px rgba(255, 215, 0, 0.6);
+}
 /* RB styling */
 .rb-block.filled {
     background: var(--sw-red);
@@ -1051,6 +1070,7 @@ button:hover {
     height: 32px;
     border: 3px solid;
     border-radius: 4px;
+    font-size: 12;
     background: rgba(0,0,0,0.4);
     box-shadow: 0 0 8px currentColor;
 }
@@ -1147,6 +1167,29 @@ button:hover {
 
 .hidden {
     display: none;
+}
+#removeXpChoiceBtn {
+    width: 18px;
+    height: 18px;
+
+    border-radius: 50%;
+    border: 1px solid #ff4444;
+    background: #111;
+    color: #ff4444;
+ padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left:5px;
+    font-size: 11px;
+    cursor: pointer;
+
+    box-shadow: 0 0 6px rgba(255, 68, 68, 0.5);
+}
+
+#removeXpChoiceBtn:hover {
+    background: #ff4444;
+    color: #000;
 }
 @media (max-width: 768px) {
 

@@ -61,25 +61,27 @@
 
     <div class="skill-slot-empty" id="skillSlotEmpty">
         EMPTY SLOT
-    </div>
-
-    <div class="skill-slot-filled hidden" id="skillSlotFilled">
-
-        <div class="skill-icon-wrapper">
-            <img id="customSkillIcon" />
-            <button id="removeSkillBtn">✕</button>
         </div>
 
-        <div id="customSkillName" class="skill-name"></div>
+                <div class="skill-slot-filled hidden" id="skillSlotFilled">
 
-    </div>
-    <div class="custom-choice-status" id="customChoiceStatus">
+                    <div class="skill-icon-wrapper">
+                        <img id="customSkillIcon" />
+                        <button id="removeSkillBtn">✕</button>
+                    </div>
+
+                    <div id="customSkillName" class="skill-name"></div>
+
+                </div>
+                <div class="custom-choice-status" id="customChoiceStatus">
     <div id="customChoiceText"></div>
+    <button id="removeXpChoiceBtn" class="hidden">✕</button>
 </div>
- <button id="xpOrSkillBtn" class="btn-primary">
-    +2 XP / CREATE SKILL
-</button>
-</div>
+            <button id="xpOrSkillBtn" class="btn-primary">
+                +2 XP / CREATE SKILL
+            </button>
+            <input type="file" id="customSkillUpload" accept="image/*" hidden>
+        </div>
 
      <div class="stat-item xp-mini">
  
@@ -116,7 +118,7 @@
         <div class="skills-layer" id="skillsLayer">
 
             <!-- TIER V -->
-            <div class="tier-container tier-5" data-tier="5">
+            <div class="tier-container tier-V" data-tier="5">
                 
                 <div class="tier-header">
                     <div class="tier-title">TIER V — HIGH COMMAND</div>
@@ -127,7 +129,7 @@
             </div>
 
             <!-- TIER IV -->
-            <div class="tier-container tier-4" data-tier="4">
+            <div class="tier-container tier-IV" data-tier="4">
 
                 <div class="tier-header">
                     <div class="tier-title">TIER IV — LORD & COMMANDER</div>
@@ -138,7 +140,7 @@
             </div>
 
             <!-- TIER III -->
-            <div class="tier-container tier-3" data-tier="3">
+            <div class="tier-container tier-III" data-tier="3">
 
                 <div class="tier-header">
                     <div class="tier-title">TIER III — OFFICER CORPS</div>
@@ -149,7 +151,7 @@
             </div>
 
             <!-- TIER II -->
-            <div class="tier-container tier-2" data-tier="2">
+            <div class="tier-container tier-II" data-tier="2">
 
                 <div class="tier-header">
                     <div class="tier-title">TIER II — ADVANCED TRAINING</div>
@@ -160,7 +162,7 @@
             </div>
 
             <!-- TIER I -->
-            <div class="tier-container tier-1" data-tier="1">
+            <div class="tier-container tier-I" data-tier="1">
 
                 <div class="tier-header">
                     <div class="tier-title">TIER I — BASIC TRAINING</div>

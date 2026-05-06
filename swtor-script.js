@@ -11,6 +11,7 @@ const state = {
     lastTier: 1,
     customSkill: null, // stores the created skill
     customSkillUsed: false,
+    customXPBonus:false,
     tiers: {
         1: { threshold: 0 },
         2: { threshold: 30 },
@@ -280,7 +281,7 @@ function getCurrentRankName() {
         tierRanks.length - 1
     );
     
-    return `TIER ${tier}:| XP: ${state.spentXP}/${state.totalXP}`;
+    return `LEVEL ${tier}:| XP: ${state.spentXP}/${state.totalXP}`;
 }
 
 // Check if skill is available based on connections
@@ -301,27 +302,36 @@ function renderSkillTree() {
 
     const tierOrder = [5, 4, 3, 2, 1];
 
+    const roman = {
+        1: 'I',
+        2: 'II',
+        3: 'III',
+        4: 'IV',
+        5: 'V'
+    };
+
     tierOrder.forEach(tier => {
 
         const tierContainer = document.createElement('div');
         tierContainer.className = `tier-container tier-${tier}`;
 
-        // HEADER (this replaces overlay tiers)
         const header = document.createElement('div');
         header.className = 'tier-header';
+
         const ranksForTier = RANKS[tier] || [];
 
-    header.innerHTML = `
-        <div class="tier-title">TIER ${tier}</div>
-        <div class="tier-ranks">${ranksForTier.join(' • ')}</div>
-`;
+        header.innerHTML = `
+            <div class="tier-title">LEVEL ${roman[tier]}</div>
+            <div class="tier-ranks">${ranksForTier.join(' • ')}</div>
+        `;
 
         const rowsWrapper = document.createElement('div');
         rowsWrapper.className = 'tier-rows';
 
         const tierSkills = state.skills.filter(s => s.tier === tier);
-        
+
         const rows = {};
+
         tierSkills.forEach(skill => {
             if (!rows[skill.row]) rows[skill.row] = [];
             rows[skill.row].push(skill);
@@ -346,7 +356,6 @@ function renderSkillTree() {
 
                     const skill = rows[rowIndex].find(s => s.col === col);
                     if (skill) {
-                        
                         cell.appendChild(createSkillNode(skill));
                     }
 
@@ -485,7 +494,7 @@ function handleSkillClick(skill) {
     }
     
     if (getCurrentTier() < skill.tier) {
-        alert('You need to be Tier ' + skill.tier + ' to upgrade this skill!');
+        alert('You need to be Level ' + skill.tier + ' to upgrade this skill!');
         return;
     }
     
@@ -597,7 +606,7 @@ function cycleSkillUp(skill, node) {
     }
     
     if (getCurrentTier() < skill.tier) {
-        alert('You need to be Tier ' + skill.tier + ' to upgrade this skill!');
+        alert('You need to be Level ' + skill.tier + ' to upgrade this skill!');
         return;
     }
     
@@ -780,7 +789,7 @@ function rankUpSkill(skill) {
     }
     
     if (getCurrentTier() < skill.tier) {
-        alert(`You need to be Tier ${skill.tier} to upgrade this skill!`);
+        alert(`You need to be Level ${skill.tier} to upgrade this skill!`);
         return;
     }
     
@@ -1313,11 +1322,11 @@ function renderSkillLegend() {
     if (!container) return;
 
     const levels = [
-        { level: 'I', color: '#ffffff'},
-        { level: 'II', color: '#3fff00' },
-        { level: 'III', color: '#1e90ff'},
-        { level: 'IV', color: '#ffd700' },
-        { level: 'V', color: '#bf00ff' }
+        { level: '1', color: '#ffffff', xp: 1},
+        { level: '2', color: '#3fff00', xp: 2 },
+        { level: '3', color: '#1e90ff', xp:3},
+        { level: '4', color: '#ffd700',xp:4},
+        { level: '5', color: '#bf00ff', xp:6}
     ];
 
     container.innerHTML = '';
@@ -1327,49 +1336,63 @@ function renderSkillLegend() {
         row.className = 'legend-row';
 
         row.innerHTML = `
-            <div class="legend-box" style="border-color:${lvl.color}"></div>
-            <span> — LEVEL ${lvl.level}</span>
-        `;
+                <div class="legend-box" style="border-color:${lvl.color}"></div>
+                <span class="legend-text" >
+                    — TIER ${lvl.level}
+                    <span class="xp-cost">(-${lvl.xp} XP)</span>
+                    <span class="rb-gain">(+${lvl.xp} RB)</span>
+                </span>
+            `;
 
         container.appendChild(row);
     });
 }
 
- function createCustomSkill() {
+function createCustomSkill() {
     const name = prompt("Name your custom skill:");
     if (!name) return;
 
+    // ✅ ALWAYS create a fresh input
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
+    input.style.display = "none";
 
-    input.onchange = (e) => {
+    document.body.appendChild(input);
+
+    input.addEventListener("change", (e) => {
         const file = e.target.files[0];
-        if (!file) return;
+        if (!file) {
+            document.body.removeChild(input);
+            return;
+        }
 
         const reader = new FileReader();
 
         reader.onload = (event) => {
-
             state.customSkill = {
                 id: "custom",
                 label: name,
                 icon: event.target.result,
-                rank: 1,        // starts already invested (2 XP equivalent)
-                xpInvested: 2,
+                rank: 2,
                 maxRank: 5
             };
 
             state.customSkillUsed = true;
-            state.customSkill.rank = 2;
+
             renderCustomSkill();
+            setCustomChoiceDisplay("skill");
             lockCustomChoice("skill");
+
+            // ✅ CLEANUP
+            document.body.removeChild(input);
         };
 
         reader.readAsDataURL(file);
-    };
+    });
 
-    input.click();
+    // 🔥 important: slight delay makes it 100% reliable
+    setTimeout(() => input.click(), 0);
 }
 function setCustomChoiceDisplay(type) {
     const box = document.getElementById("customChoiceStatus");
@@ -1410,33 +1433,30 @@ function renderCustomSkill() {
     const slot = document.getElementById("skillSlotFilled");
     const empty = document.getElementById("skillSlotEmpty");
 
+    // 🔥 XP MODE
+    if (state.customXPBonus) {
+        icon.src = "icons/xp-icon.png"; // or any icon you want
+        name.textContent = "+2 XP BONUS";
+
+        icon.style.border = "3px solid gold";
+        icon.style.boxShadow = "0 0 12px gold";
+
+        empty.classList.add("hidden");
+        slot.classList.remove("hidden");
+
+        return;
+    }
+
+    // 🔥 SKILL MODE
     if (!state.customSkill) return;
 
     const skill = state.customSkill;
-    
 
     icon.src = skill.icon;
-    name.textContent = `${skill.label}`;
-
-    // 🎨 LEVEL FRAME
-    const levelColors = {
-        1: '#ffffff',
-        2: '#3fff00',
-        3: '#1e90ff',
-        4: '#ffd700',
-        5: '#bf00ff'
-    };
-
-    icon.style.border = `3px solid ${levelColors[skill.rank]}`;
-    icon.style.boxShadow = `0 0 10px ${levelColors[skill.rank]}`;
+    name.textContent = skill.label;
 
     empty.classList.add("hidden");
     slot.classList.remove("hidden");
-
-    slot.onclick = (e) => {
-    if (e.target.id === "removeSkillBtn") return;
-     upgradeCustomSkill();
-    };
 }
 function upgradeCustomSkill() {
     const skill = state.customSkill;
@@ -1472,6 +1492,7 @@ function upgradeCustomSkill() {
         saveHistory();
         state.totalXP += 2;
         state.customSkillUsed = true;
+        state.customXPBonus = true;
         updateAll();
     } 
  document.getElementById("xpOrSkillBtn").addEventListener("click", () => {
@@ -1481,7 +1502,7 @@ function upgradeCustomSkill() {
     }
 
     const choice = confirm(
-        "Choose your reward:\n\n" +
+        "Choose your bonus:\n\n" +
         "OK = Gain +2 XP\n" +
         "Cancel = Create Custom Skill"
     );
@@ -1494,29 +1515,59 @@ function upgradeCustomSkill() {
 
     } else {
         createCustomSkill();
-        setCustomChoiceDisplay("skill");
+       
         
     }
 });
-function removeCustomSkill() {
-    if (!state.customSkill) return;
+function removeCustomChoice() {
+    if (!state.customSkill && !state.customXPBonus) return;
 
-    if (!confirm("Remove custom skill? You will lose invested XP.")) return;
+    if (!confirm("Remove this choice?")) return;
 
     saveHistory();
 
-    state.customSkill = null;
+    // 🔥 remove XP choice
+    if (state.customXPBonus) {
+        state.totalXP -= 2;
+        state.customXPBonus = false;
+    }
 
+    // 🔥 remove skill choice
+    if (state.customSkill) {
+        state.customSkill = null;
+    }
+
+    state.customSkillUsed = false;
+    document.getElementById("customChoiceStatus").style.display = "none";
     document.getElementById("skillSlotFilled").classList.add("hidden");
     document.getElementById("skillSlotEmpty").classList.remove("hidden");
     document.getElementById("xpOrSkillBtn").style.display = "flex";
-    state.customSkillUsed = false;
+     document.getElementById("removeXpChoiceBtn").style.display = "none";
 
     updateAll();
 }
 document.getElementById("removeSkillBtn").onclick = (e) => {
     e.stopPropagation(); // 🔥 THIS FIXES YOUR BUG
-    removeCustomSkill();
+    removeCustomChoice();
 };
+document.getElementById("removeXpChoiceBtn").addEventListener("click", () => {
+    // Remove XP (adjust if you store it differently)
+    
+    removeCustomChoice();
+
+    // Clear UI
+   /*  const box = document.getElementById("customChoiceStatus");
+     box.style.display = 'none';
+    removeXpChoiceBtn.classList.add("hidden");
+
+     
+    const btn = document.getElementById("xpOrSkillBtn");
+    if (btn) btn.style.display = "flex";
+    state.totalXP -= 2;
+    state.customSkillUsed = false;
+    state.customXPBonus = false;
+    updateAll();()*/
+ 
+});
 // Initialize
 document.addEventListener('DOMContentLoaded', init);
