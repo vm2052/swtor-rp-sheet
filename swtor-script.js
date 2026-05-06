@@ -1392,6 +1392,7 @@ function createCustomSkill() {
     });
 
     // 🔥 important: slight delay makes it 100% reliable
+     document.getElementById("removeXpChoiceBtn").style.display = "none";
     setTimeout(() => input.click(), 0);
 }
 function setCustomChoiceDisplay(type) {
@@ -1404,11 +1405,13 @@ function setCustomChoiceDisplay(type) {
 
     if (type === "xp") {
         text.textContent = "Choice locked: +2 XP gained";
+           document.getElementById("removeXpChoiceBtn").style.display = "flex";
     }
 
     if (type === "skill") {
         text.textContent = "Choice locked: Custom Skill created";
     }
+    
 }
 function lockCustomChoice(type) {
     state.customSkillUsed = true;
@@ -1432,10 +1435,11 @@ function renderCustomSkill() {
     const name = document.getElementById("customSkillName");
     const slot = document.getElementById("skillSlotFilled");
     const empty = document.getElementById("skillSlotEmpty");
+    const container = document.getElementById("customSkillSlot");
 
-    // 🔥 XP MODE
+    // XP MODE
     if (state.customXPBonus) {
-        icon.src = "icons/xp-icon.png"; // or any icon you want
+        icon.src = "icons/xp-icon.png";
         name.textContent = "+2 XP BONUS";
 
         icon.style.border = "3px solid gold";
@@ -1443,11 +1447,11 @@ function renderCustomSkill() {
 
         empty.classList.add("hidden");
         slot.classList.remove("hidden");
-
+      
         return;
     }
 
-    // 🔥 SKILL MODE
+    // SKILL MODE
     if (!state.customSkill) return;
 
     const skill = state.customSkill;
@@ -1455,8 +1459,50 @@ function renderCustomSkill() {
     icon.src = skill.icon;
     name.textContent = skill.label;
 
+    // Apply level-based styling
+    const levelColors = {
+        0: { border: '#555', shadow: '0 0 5px rgba(0,0,0,0.5)', width: '2px' },
+        1: { border: '#ffffff', shadow: '0 0 12px #ffffff', width: '3px' },
+        2: { border: '#3fff00', shadow: '0 0 14px #3fff00', width: '3px' },
+        3: { border: '#1e90ff', shadow: '0 0 16px #1e90ff', width: '3px' },
+        4: { border: '#ffd700', shadow: '0 0 18px #ffd700', width: '3px' },
+        5: { border: '#bf00ff', shadow: '0 0 22px #bf00ff', width: '3px' }
+    };
+
+    const level = skill.rank || 0;
+    const colors = levelColors[level];
+
+    icon.style.borderColor = colors.border;
+    icon.style.borderWidth = colors.width;
+    icon.style.boxShadow = colors.shadow;
+    icon.style.borderStyle = 'solid';
+
+    // Add pulse animation for level 5
+    if (level === 5) {
+        icon.style.animation = 'pulse-glow 2s ease-in-out infinite';
+    } else {
+        icon.style.animation = '';
+    }
+
+    // Update name color based on level
+    const nameColors = {
+        0: '#ffffff',
+        1: '#ffffff',
+        2: '#3fff00',
+        3: '#1e90ff',
+        4: '#ffd700',
+        5: '#bf00ff'
+    };
+    name.style.color = nameColors[level] || '#ffffff';
+
+    // Show level indicator
+    name.textContent = `${skill.label}`;
+
     empty.classList.add("hidden");
     slot.classList.remove("hidden");
+
+    // click to level up
+    slot.onclick = () => upgradeCustomSkill();
 }
 function upgradeCustomSkill() {
     const skill = state.customSkill;
