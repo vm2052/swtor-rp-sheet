@@ -94,7 +94,7 @@ const state = {
              { id: 'maneuver', tier: 2, icon: 'icons/maneuver.webp', rank: 0, type: 'rb', row: 3, col: 14,  label: 'Maneuver', connectsTo: [] },
             { id: 'force_choke', tier: 2, icon: 'icons/force_choke.png', rank: 0, type: 'rb', row: 3, col: 15,  label: 'Force Choke', connectsTo: ['force_crush'] },
              { id: 'false_ls_aura', tier: 2, icon: 'icons/false_ls_aura.webp', rank: 0, type: 'rb', row: 3, col: 16,  label: 'False LS Aura', connectsTo: ['force_cloak'] },
-              { id: 'pyrokinesis', tier: 2, icon: 'icons/pyrokinesis.png', rank: 0, type: 'rb', row: 3, col: 17,  label: 'Pyrokinesis', connectsTo: ['pyrokinesis'] },
+              { id: 'pyrokinesis', tier: 2, icon: 'icons/pyrokinesis.png', rank: 0, type: 'rb', row: 3, col: 17,  label: 'Pyrokinesis', connectsTo: [] },
            { id: 'mind_trick', tier: 2, icon: 'icons/mind_trick.png', rank: 0, type: 'rb', row: 3, col: 18,  label: 'Mind Trick', connectsTo: ['dominate_mind'] },
         { id: 'drain_force', tier: 2, icon: 'icons/drain_force.png', rank: 0, type: 'rb', row: 3, col: 19,  label: 'Drain Force', connectsTo: ['drain_life'] },
 
