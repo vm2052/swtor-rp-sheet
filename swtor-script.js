@@ -729,8 +729,6 @@ function drawConnections() {
 
     const workspaceRect = elements.workspace.getBoundingClientRect();
 
-    const LANE_OFFSET = 18;
-
     state.skills.forEach(skill => {
 
         if (!skill.connectsTo?.length) return;
@@ -780,26 +778,105 @@ function drawConnections() {
 
             let path = '';
 
+            // Calculate actual column width in pixels
+            let colWidth = 60; // fallback
+            const refSkill = state.skills.find(s => s.col === skill.col + 1 && s.row === skill.row);
+            if (!refSkill) {
+                const anyRef = state.skills.find(s => s.col === skill.col + 1);
+                if (anyRef) {
+                    const refEl = document.querySelector(`[data-skill-id="${anyRef.id}"]`);
+                    if (refEl) {
+                        const refRect = refEl.getBoundingClientRect();
+                        const refX = refRect.left + refRect.width / 2 - workspaceRect.left + elements.workspace.scrollLeft;
+                        colWidth = Math.abs(refX - sx);
+                    }
+                }
+            } else {
+                const refEl = document.querySelector(`[data-skill-id="${refSkill.id}"]`);
+                if (refEl) {
+                    const refRect = refEl.getBoundingClientRect();
+                    const refX = refRect.left + refRect.width / 2 - workspaceRect.left + elements.workspace.scrollLeft;
+                    colWidth = Math.abs(refX - sx);
+                }
+            }
+
+            if (colDiff !== 0) {
+                colWidth = Math.abs(tx - sx) / Math.abs(colDiff);
+            }
+
+            // Helper: get edge positions for a skill in workspace coords
+            const getSkillEdges = (skillObj) => {
+                const el = document.querySelector(`[data-skill-id="${skillObj.id}"]`);
+                if (!el) return null;
+                const rect = el.getBoundingClientRect();
+                return {
+                    top: rect.top - workspaceRect.top + elements.workspace.scrollTop,
+                    bottom: rect.bottom - workspaceRect.top + elements.workspace.scrollTop,
+                    left: rect.left - workspaceRect.left + elements.workspace.scrollLeft,
+                    right: rect.right - workspaceRect.left + elements.workspace.scrollLeft,
+                    centerX: rect.left + rect.width / 2 - workspaceRect.left + elements.workspace.scrollLeft,
+                    centerY: rect.top + rect.height / 2 - workspaceRect.top + elements.workspace.scrollTop
+                };
+            };
+
+            const sourceEdges = getSkillEdges(skill);
+            const targetEdges = getSkillEdges(targetSkill);
+
+            if (!sourceEdges || !targetEdges) return;
+
             // -----------------------------------
             // SAME COLUMN
             // -----------------------------------
 
             if (colDiff === 0) {
 
-                const startY =
-                    rowDiff > 0
-                        ? sRect.bottom - workspaceRect.top
-                        : sRect.top - workspaceRect.top;
+                const startY = rowDiff > 0 ? sourceEdges.bottom : sourceEdges.top;
+                const endY = rowDiff > 0 ? targetEdges.top : targetEdges.bottom;
 
-                const endY =
-                    rowDiff > 0
-                        ? tRect.top - workspaceRect.top
-                        : tRect.bottom - workspaceRect.top;
+                // Check for blocking skills between source and target in the same column
+                const minRow = Math.min(skill.row, targetSkill.row);
+                const maxRow = Math.max(skill.row, targetSkill.row);
 
-                path = `
-                    M ${sx} ${startY}
-                    L ${tx} ${endY}
-                `;
+                const blockingSkills = state.skills.filter(s =>
+                    s.id !== skill.id &&
+                    s.id !== targetId &&
+                    s.col === skill.col &&
+                    s.row > minRow &&
+                    s.row < maxRow
+                );
+
+                if (blockingSkills.length > 0) {
+                    // Route around: go OUT horizontally, then up/down, then back IN
+                    const laneX = sx + colWidth * 0.5;
+
+                    // Get blocker positions
+                    const blockerEdges = blockingSkills.map(s => getSkillEdges(s)).filter(e => e !== null);
+                    const firstBlockerTop = Math.min(...blockerEdges.map(e => e.top));
+                    const lastBlockerBottom = Math.max(...blockerEdges.map(e => e.bottom));
+
+                    // Route Y - centered between source edge and first blocker
+                    let routeY;
+                    if (rowDiff > 0) {
+                        // Going down - center between source bottom and first blocker top
+                        routeY = (sourceEdges.bottom + firstBlockerTop) / 2;
+                    } else {
+                        // Going up - center between source top and last blocker bottom
+                        routeY = (sourceEdges.top + lastBlockerBottom) / 2;
+                    }
+
+                    path = `
+                        M ${sx} ${startY}
+                        L ${laneX} ${startY}
+                        L ${laneX} ${endY}
+                        L ${sx} ${endY}
+                    `;
+                } else {
+                    // No blockers - straight line
+                    path = `
+                        M ${sx} ${startY}
+                        L ${sx} ${endY}
+                    `;
+                }
             }
 
             // -----------------------------------
@@ -808,49 +885,63 @@ function drawConnections() {
 
             else if (rowDiff === 0) {
 
-                const startX =
-                    colDiff > 0
-                        ? sRect.right - workspaceRect.left
-                        : sRect.left - workspaceRect.left;
+                const startX = colDiff > 0 ? sourceEdges.right : sourceEdges.left;
+                const endX = colDiff > 0 ? targetEdges.left : targetEdges.right;
 
-                const endX =
-                    colDiff > 0
-                        ? tRect.left - workspaceRect.left
-                        : tRect.right - workspaceRect.left;
+                // Check for blocking skills between source and target in the same row
+                const minCol = Math.min(skill.col, targetSkill.col);
+                const maxCol = Math.max(skill.col, targetSkill.col);
 
-                path = `
-                    M ${startX} ${sy}
-                    L ${endX} ${ty}
-                `;
+                const blockingSkills = state.skills.filter(s =>
+                    s.id !== skill.id &&
+                    s.id !== targetId &&
+                    s.row === skill.row &&
+                    s.col > minCol &&
+                    s.col < maxCol
+                );
+
+                if (blockingSkills.length > 0) {
+                    // Route around: go OUT vertically, then across, then back IN
+                    const blockerEdges = blockingSkills.map(s => getSkillEdges(s)).filter(e => e !== null);
+                    const highestBlockerTop = Math.min(...blockerEdges.map(e => e.top));
+
+                    // Route above the blockers, centered
+                    const routeY = highestBlockerTop - 15;
+                    const laneX = (startX + endX) / 2;
+
+                    path = `
+                        M ${startX} ${sy}
+                        L ${startX} ${routeY}
+                        L ${endX} ${routeY}
+                        L ${endX} ${sy}
+                    `;
+                } else {
+                    // No blockers - straight line
+                    path = `
+                        M ${startX} ${sy}
+                        L ${endX} ${ty}
+                    `;
+                }
             }
 
-            // -----------------------------------
-// -----------------------------------
+           // -----------------------------------
 // DIAGONAL
 // -----------------------------------
 
 else {
 
-    const startX =
-        colDiff > 0
-            ? sRect.right - workspaceRect.left
-            : sRect.left - workspaceRect.left;
-
-    const endX =
-        colDiff > 0
-            ? tRect.left - workspaceRect.left
-            : tRect.right - workspaceRect.left;
-
+    const startX = colDiff > 0 ? sourceEdges.right : sourceEdges.left;
+    const endX = colDiff > 0 ? targetEdges.left : targetEdges.right;
     const startY = sy;
     const endY = ty;
-    
+
     // Find all skills that are in the bounding rectangle between source and target
     const minRow = Math.min(skill.row, targetSkill.row);
     const maxRow = Math.max(skill.row, targetSkill.row);
     const minCol = Math.min(skill.col, targetSkill.col);
     const maxCol = Math.max(skill.col, targetSkill.col);
-    
-    const blockingSkills = state.skills.filter(s => 
+
+    const blockingSkills = state.skills.filter(s =>
         s.id !== skill.id &&
         s.id !== targetId &&
         s.row >= minRow &&
@@ -858,72 +949,65 @@ else {
         s.col > minCol &&
         s.col < maxCol
     );
-    
+
     let routeY;
     let laneX;
-    
-    // Calculate horizontal lane position (centered in the gap)
-    const colWidth = Math.abs(tx - sx) / Math.abs(colDiff);
-    
+
+    // Calculate horizontal lane position (centered in the gap between columns)
     if (colDiff > 0) {
         laneX = sx + colWidth * 0.5;
     } else {
         laneX = sx - colWidth * 0.5;
     }
-    
+
     if (blockingSkills.length > 0) {
-        // Get bounding rectangles of all blocking skills
-        const blockerRects = blockingSkills.map(s => {
-            const el = document.querySelector(`[data-skill-id="${s.id}"]`);
-            if (el) {
-                const rect = el.getBoundingClientRect();
-                return {
-                    top: rect.top - workspaceRect.top + elements.workspace.scrollTop,
-                    bottom: rect.bottom - workspaceRect.top + elements.workspace.scrollTop
-                };
-            }
-            return null;
-        }).filter(r => r !== null);
-        
-        // Find the boundaries of blocking skills
-        const highestBlockerTop = Math.min(...blockerRects.map(r => r.top));
-        const lowestBlockerBottom = Math.max(...blockerRects.map(r => r.bottom));
-        
-        // Get source and target edges in workspace coordinates
-        const sourceTop = sRect.top - workspaceRect.top + elements.workspace.scrollTop;
-        const sourceBottom = sRect.bottom - workspaceRect.top + elements.workspace.scrollTop;
-        const targetTop = tRect.top - workspaceRect.top + elements.workspace.scrollTop;
-        const targetBottom = tRect.bottom - workspaceRect.top + elements.workspace.scrollTop;
-        
-        if (skill.row > targetSkill.row) {
-            // Source is below target - route ABOVE the blockers
-            // Available space: between target's bottom (or the top edge of the workspace) and the highest blocker's top
-            const upperLimit = Math.min(targetTop, highestBlockerTop - 10);
-            const lowerLimit = highestBlockerTop - 10;
-            routeY = (upperLimit + targetBottom) / 2;
-            
-            // Make sure we're centered in the gap above the blockers
-            if (routeY > highestBlockerTop - 5) {
-                routeY = highestBlockerTop - 15;
+        const blockerEdges = blockingSkills.map(s => getSkillEdges(s)).filter(e => e !== null);
+
+        if (blockerEdges.length > 0) {
+            const highestBlockerTop = Math.min(...blockerEdges.map(e => e.top));
+            const lowestBlockerBottom = Math.max(...blockerEdges.map(e => e.bottom));
+
+            // Determine which side of the blockers to route
+            // Compare the source and target rows to the blocker rows
+            const allBlockersAboveSource = blockingSkills.every(s => s.row < skill.row);
+            const allBlockersBelowSource = blockingSkills.every(s => s.row > skill.row);
+            const allBlockersAboveTarget = blockingSkills.every(s => s.row < targetSkill.row);
+            const allBlockersBelowTarget = blockingSkills.every(s => s.row > targetSkill.row);
+
+            if (allBlockersAboveSource && allBlockersBelowTarget) {
+                // Blockers are between source and target vertically
+                // Route through the middle of the blockers (between top and bottom)
+                routeY = (highestBlockerTop + lowestBlockerBottom) / 2;
+            } else if (skill.row > targetSkill.row) {
+                // Source is below target
+                if (blockingSkills.some(s => s.row >= targetSkill.row)) {
+                    // Blockers are at or above target's row - route ABOVE everything
+                    // Go above the highest blocker (or target, whichever is higher)
+                    const upperBound = Math.min(targetEdges.top, highestBlockerTop);
+                    routeY = upperBound - 20;
+                } else {
+                    // Blockers are between - route between target and blockers
+                    routeY = (targetEdges.bottom + highestBlockerTop) / 2;
+                }
+            } else {
+                // Source is above target
+                if (blockingSkills.some(s => s.row <= targetSkill.row)) {
+                    // Blockers are at or below target's row - route BELOW everything
+                    const lowerBound = Math.max(targetEdges.bottom, lowestBlockerBottom);
+                    routeY = lowerBound + 20;
+                } else {
+                    // Blockers are between - route between source and blockers
+                    routeY = (lowestBlockerBottom + targetEdges.top) / 2;
+                }
             }
         } else {
-            // Source is above target - route BELOW the blockers
-            // Available space: between lowest blocker's bottom and source's top (or target's top)
-            const upperLimit = lowestBlockerBottom + 10;
-            const lowerLimit = Math.max(sourceBottom, targetBottom, lowestBlockerBottom + 30);
-            routeY = (upperLimit + lowerLimit) / 2;
-            
-            // Make sure we're centered in the gap below the blockers
-            if (routeY < lowestBlockerBottom + 5) {
-                routeY = lowestBlockerBottom + 15;
-            }
+            routeY = (startY + endY) / 2;
         }
     } else {
-        // No blockers - use midpoint between source and target Y
         routeY = (startY + endY) / 2;
     }
-    
-    // Build the path with proper horizontal segments going out and in
+
+    // Build the path: out horizontally -> vertically -> horizontally -> in vertically
     path = `
         M ${startX} ${startY}
         L ${laneX} ${startY}
@@ -939,46 +1023,26 @@ else {
             );
 
             pathEl.setAttribute('d', path);
-
             pathEl.setAttribute('fill', 'none');
-
             pathEl.setAttribute(
                 'stroke',
                 skill.rank > 0 && targetSkill.rank > 0
                     ? '#ffd700'
                     : 'rgba(255,215,0,0.4)'
             );
-
             pathEl.setAttribute(
                 'stroke-width',
-                skill.rank > 0 && targetSkill.rank > 0
-                    ? '2.5'
-                    : '2'
+                skill.rank > 0 && targetSkill.rank > 0 ? '2.5' : '2'
             );
-
-            pathEl.setAttribute(
-                'stroke-linejoin',
-                'round'
-            );
-
-            pathEl.setAttribute(
-                'stroke-linecap',
-                'round'
-            );
-
+            pathEl.setAttribute('stroke-linejoin', 'round');
+            pathEl.setAttribute('stroke-linecap', 'round');
             pathEl.setAttribute(
                 'stroke-dasharray',
-                skill.rank > 0 && targetSkill.rank > 0
-                    ? 'none'
-                    : '5 4'
+                skill.rank > 0 && targetSkill.rank > 0 ? 'none' : '5 4'
             );
 
             if (skill.rank > 0 && targetSkill.rank > 0) {
-
-                pathEl.setAttribute(
-                    'filter',
-                    'drop-shadow(0 0 4px #ffd700)'
-                );
+                pathEl.setAttribute('filter', 'drop-shadow(0 0 4px #ffd700)');
             }
 
             svg.appendChild(pathEl);
