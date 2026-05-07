@@ -474,21 +474,17 @@ node.onmouseenter = () => {
 };
 // In createSkillNode(), add these alongside the existing mouseenter/mouseleave for tooltips:
 
+// In createSkillNode(), the mouseenter event:
 node.addEventListener('mouseenter', () => {
-    // Highlight the hovered skill
-    node.style.transform = 'scale(1.15)';
-    node.style.zIndex = '20';
+    node.classList.add('active-hover-skill');
     
-    // Highlight all outgoing connections and their target skills
     if (skill.connectsTo && skill.connectsTo.length > 0) {
         skill.connectsTo.forEach(targetId => {
-            // Highlight the connection path
             const paths = document.querySelectorAll(
                 `.connection-path[data-connection-source="${skill.id}"][data-connection-target="${targetId}"]`
             );
             paths.forEach(p => p.classList.add('highlighted-connection'));
             
-            // Highlight the target skill node
             const targetNode = document.querySelector(`[data-skill-id="${targetId}"]`);
             if (targetNode) {
                 targetNode.classList.add('connected-skill-highlight');
@@ -496,37 +492,27 @@ node.addEventListener('mouseenter', () => {
         });
     }
     
-    // Highlight all incoming connections and their source skills
     const incomingPaths = document.querySelectorAll(
         `.connection-path[data-connection-target="${skill.id}"]`
     );
     incomingPaths.forEach(p => {
         p.classList.add('highlighted-connection');
         
-        // Highlight the source skill
         const sourceId = p.getAttribute('data-connection-source');
         const sourceNode = document.querySelector(`[data-skill-id="${sourceId}"]`);
         if (sourceNode) {
             sourceNode.classList.add('connected-skill-highlight');
         }
     });
-    
-    // Highlight this skill as the "active" one
-    node.classList.add('active-hover-skill');
 });
 
 node.addEventListener('mouseleave', () => {
-    // Reset the hovered skill
-    node.style.transform = '';
-    node.style.zIndex = '5';
     node.classList.remove('active-hover-skill');
     
-    // Remove highlights from all connections
     document.querySelectorAll('.highlighted-connection').forEach(p => {
         p.classList.remove('highlighted-connection');
     });
     
-    // Remove highlights from all connected skills
     document.querySelectorAll('.connected-skill-highlight').forEach(n => {
         n.classList.remove('connected-skill-highlight');
     });
