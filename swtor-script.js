@@ -10,8 +10,7 @@ const state = {
     history: [],
     lastTier: 1,
     customSkill: null, // stores the created skill
-    customSkillUsed: false,
-    customXPBonus:false,
+    customChoice: null,
     tiers: {
         1: { threshold: 0 },
         2: { threshold: 30 },
@@ -55,7 +54,7 @@ const state = {
         // TIER 3 - Officer Corps
 
         { id: 'tactics', tier: 3, icon: 'icons/tactics.png', row: 3, col: 2,  rank: 0, type: 'rb', label: 'Tactics', connectsTo: ['stategic_leadership'] },
-        { id: 'electronets', tier: 3, icon: 'icons/electronets.webp', row: 3, col: 3,  rank: 0, type: 'rb', label: 'Electronets', connectsTo: [] },
+        
         { id: 'marine_engineering', tier: 3, icon: 'icons/marine_engineering.webp', row: 3, col: 6,  rank: 0, type: 'rb', label: 'Marine Engineering', connectsTo: ['annihilation'] },
         { id: 'remote_control', tier: 3, icon: 'icons/remote_control.webp', row: 3, col: 7,  rank: 0, type: 'rb', label: 'Remote Control', connectsTo: [], description: 'This skill represents a character’s ability to access and control technological systems, such as that of droids or security networks remotely. ' },
         { id: 'surgery', tier: 3, icon: 'icons/surgery.webp', row: 3, col: 8,  rank: 0, type: 'rb', label: 'Surgery', connectsTo: ['bioengineering'] },
@@ -68,6 +67,7 @@ const state = {
         { id: 'darts', tier: 2, icon: 'icons/darts.webp', rank: 0, type: 'rb', row: 5, col: 1,  label: 'Darts', connectsTo: [], description: 'This skill represents a character’s ability to accurately use darts of various types against others or avoid them. ' },
         { id: 'initiative', tier: 2, icon: 'icons/initiative.png', rank: 0, type: 'rb', row: 5, col: 2,  label: 'Initiative', connectsTo: [] , description: 'This skill represents a character’s ability to both react quickly in response to the surrounding environment and situation. It also provides a bonus when determining the order of actions of different characters.'},
         { id: 'demolition', tier: 2, icon: 'icons/demolition.webp', rank: 0, type: 'rb', row: 5, col: 3,  label: 'Demolition', connectsTo: [] },
+       { id: 'electronets', tier: 2, icon: 'icons/electronets.webp', row: 4, col: 3,  rank: 0, type: 'rb', label: 'Electronets', connectsTo: [] },
         { id: 'disarm', tier: 2, icon: 'icons/disarm.webp', rank: 0, type: 'rb', row: 5, col: 4,  label: 'Disarm', connectsTo: [] },
         { id: 'infiltration', tier: 2, icon: 'icons/infiltration.webp', rank: 0, type: 'rb', row: 5, col: 5,  label: 'Infiltration', connectsTo: [] , description: 'This skill represents a character’s ability to conceal their own motivations and intentions, whilst taking actions to covertly carry out actions that serve these goals without drawing notice to themselves. '},
         { id: 'gunnery', tier: 2, icon: 'icons/gunnery.webp', rank: 0, type: 'rb', row: 5, col: 6,  label: 'Gunnery', connectsTo: ['marine_engineering'] },
@@ -121,7 +121,7 @@ const state = {
         { id: 'biology', tier: 1, icon: 'icons/biology.webp', row:7, col: 9, rank: 0, type: 'hp', label: 'Biology', connectsTo: ['chemistry'], description: 'This skill represents a character’s ability to understand the function of living things, including topics such as genetics and microscopic study. Medical knowledge is excluded.'  },
        { id: 'cybernetics', tier: 1, icon: 'icons/cybernetics.png', row:8, rank: 0, col: 9, type: 'normal', label: 'Cybernetics', connectsTo: [], description: 'This skill represents a character’s ability to design and implement cybernetics into a living body. May also apply to the use of more complicated cybernetic functions. ' },
       
-        { id: 'culture', tier: 1, icon: 'icons/culture.webp', row:7, col: 10, rank: 0, type: 'hp', label: 'Linguistics&History', connectsTo: ['diplomacy'], description: ' This skill represents a character’s ability to understand the norms and values of various cultures (inc. their own) as well as the character’s pre-existing knowledge of such. This can include: religious beliefs, cultural taboos, societal organisation and prejudices. The skill includes knowledge in History and Linguistics as well.' },
+        { id: 'culture', tier: 1, icon: 'icons/culture.webp', row:7, col: 10, rank: 0, type: 'hp', label: 'Culture', connectsTo: ['diplomacy'], description: ' aka Linguistics & History This skill represents a character’s ability to understand the norms and values of various cultures (inc. their own) as well as the character’s pre-existing knowledge of such. This can include: religious beliefs, cultural taboos, societal organisation and prejudices. The skill includes knowledge in History and Linguistics as well.' },
          { id: 'archeology', tier: 1, icon: 'icons/archeology.webp', row:8, col: 10, rank: 0, type: 'hp', label: 'Archeology', connectsTo: ['culture'], description: 'This skill represents a character’s ability to understand, remember and apply information about ancient civilisations. Such as by navigating tombs or identifying artefacts. ' },
          { id: 'diplomacy', tier: 1, icon: 'icons/diplomacy.png', row:7, col: 11, rank: 0, type: 'hp', label: 'Diplomacy', connectsTo: ['manipulation'], description:'This skill represents a character’s ability to negotiate with others using both reasoned arguments and a demeanour found to be appealing by the other party. ' },
        { id: 'persuasion', tier: 1, icon: 'icons/persuasion.webp', row:8, col: 11, rank: 0, type: 'hp', label: 'Persuasion', connectsTo: ['diplomacy'] , description: 'This skill represents a character’s ability to influence the actions of others through appeal and explanation. Such as through the application of rhetorical devices or evidence.'},
@@ -723,57 +723,266 @@ function updateNodeVisuals(skill, node) {
 
 // Draw connections
 function drawConnections() {
+
     const svg = elements.connectionsSvg;
     svg.innerHTML = '';
-    
+
     const workspaceRect = elements.workspace.getBoundingClientRect();
-    
+
+    const LANE_OFFSET = 18;
+
     state.skills.forEach(skill => {
-        if (skill.connectsTo && skill.connectsTo.length > 0) {
-            const sourceEl = document.querySelector(`[data-skill-id="${skill.id}"]`);
-            if (!sourceEl) return;
+
+        if (!skill.connectsTo?.length) return;
+
+        const sourceEl = document.querySelector(
+            `[data-skill-id="${skill.id}"]`
+        );
+
+        if (!sourceEl) return;
+
+        skill.connectsTo.forEach(targetId => {
+
+            const targetEl = document.querySelector(
+                `[data-skill-id="${targetId}"]`
+            );
+
+            if (!targetEl) return;
+
+            const targetSkill = state.skills.find(
+                s => s.id === targetId
+            );
+
+            if (!targetSkill) return;
+
+            const sRect = sourceEl.getBoundingClientRect();
+            const tRect = targetEl.getBoundingClientRect();
+
+            // REAL center positions
+            const sx = sRect.left + sRect.width / 2
+                - workspaceRect.left
+                + elements.workspace.scrollLeft;
+
+            const sy = sRect.top + sRect.height / 2
+                - workspaceRect.top
+                + elements.workspace.scrollTop;
+
+            const tx = tRect.left + tRect.width / 2
+                - workspaceRect.left
+                + elements.workspace.scrollLeft;
+
+            const ty = tRect.top + tRect.height / 2
+                - workspaceRect.top
+                + elements.workspace.scrollTop;
+
+            const rowDiff = targetSkill.row - skill.row;
+            const colDiff = targetSkill.col - skill.col;
+
+            let path = '';
+
+            // -----------------------------------
+            // SAME COLUMN
+            // -----------------------------------
+
+            if (colDiff === 0) {
+
+                const startY =
+                    rowDiff > 0
+                        ? sRect.bottom - workspaceRect.top
+                        : sRect.top - workspaceRect.top;
+
+                const endY =
+                    rowDiff > 0
+                        ? tRect.top - workspaceRect.top
+                        : tRect.bottom - workspaceRect.top;
+
+                path = `
+                    M ${sx} ${startY}
+                    L ${tx} ${endY}
+                `;
+            }
+
+            // -----------------------------------
+            // SAME ROW
+            // -----------------------------------
+
+            else if (rowDiff === 0) {
+
+                const startX =
+                    colDiff > 0
+                        ? sRect.right - workspaceRect.left
+                        : sRect.left - workspaceRect.left;
+
+                const endX =
+                    colDiff > 0
+                        ? tRect.left - workspaceRect.left
+                        : tRect.right - workspaceRect.left;
+
+                path = `
+                    M ${startX} ${sy}
+                    L ${endX} ${ty}
+                `;
+            }
+
+            // -----------------------------------
+// -----------------------------------
+// DIAGONAL
+// -----------------------------------
+
+else {
+
+    const startX =
+        colDiff > 0
+            ? sRect.right - workspaceRect.left
+            : sRect.left - workspaceRect.left;
+
+    const endX =
+        colDiff > 0
+            ? tRect.left - workspaceRect.left
+            : tRect.right - workspaceRect.left;
+
+    const startY = sy;
+    const endY = ty;
+    
+    // Find all skills that are in the bounding rectangle between source and target
+    const minRow = Math.min(skill.row, targetSkill.row);
+    const maxRow = Math.max(skill.row, targetSkill.row);
+    const minCol = Math.min(skill.col, targetSkill.col);
+    const maxCol = Math.max(skill.col, targetSkill.col);
+    
+    const blockingSkills = state.skills.filter(s => 
+        s.id !== skill.id &&
+        s.id !== targetId &&
+        s.row >= minRow &&
+        s.row <= maxRow &&
+        s.col > minCol &&
+        s.col < maxCol
+    );
+    
+    let routeY;
+    let laneX;
+    
+    // Calculate horizontal lane position (centered in the gap)
+    const colWidth = Math.abs(tx - sx) / Math.abs(colDiff);
+    
+    if (colDiff > 0) {
+        laneX = sx + colWidth * 0.5;
+    } else {
+        laneX = sx - colWidth * 0.5;
+    }
+    
+    if (blockingSkills.length > 0) {
+        // Get bounding rectangles of all blocking skills
+        const blockerRects = blockingSkills.map(s => {
+            const el = document.querySelector(`[data-skill-id="${s.id}"]`);
+            if (el) {
+                const rect = el.getBoundingClientRect();
+                return {
+                    top: rect.top - workspaceRect.top + elements.workspace.scrollTop,
+                    bottom: rect.bottom - workspaceRect.top + elements.workspace.scrollTop
+                };
+            }
+            return null;
+        }).filter(r => r !== null);
+        
+        // Find the boundaries of blocking skills
+        const highestBlockerTop = Math.min(...blockerRects.map(r => r.top));
+        const lowestBlockerBottom = Math.max(...blockerRects.map(r => r.bottom));
+        
+        // Get source and target edges in workspace coordinates
+        const sourceTop = sRect.top - workspaceRect.top + elements.workspace.scrollTop;
+        const sourceBottom = sRect.bottom - workspaceRect.top + elements.workspace.scrollTop;
+        const targetTop = tRect.top - workspaceRect.top + elements.workspace.scrollTop;
+        const targetBottom = tRect.bottom - workspaceRect.top + elements.workspace.scrollTop;
+        
+        if (skill.row > targetSkill.row) {
+            // Source is below target - route ABOVE the blockers
+            // Available space: between target's bottom (or the top edge of the workspace) and the highest blocker's top
+            const upperLimit = Math.min(targetTop, highestBlockerTop - 10);
+            const lowerLimit = highestBlockerTop - 10;
+            routeY = (upperLimit + targetBottom) / 2;
             
-            skill.connectsTo.forEach(targetId => {
-                const targetEl = document.querySelector(`[data-skill-id="${targetId}"]`);
-                if (!targetEl) return;
-                
-                const sourceRect = sourceEl.getBoundingClientRect();
-                const targetRect = targetEl.getBoundingClientRect();
-                
-                const x1 = sourceRect.left + sourceRect.width / 2 - workspaceRect.left + elements.workspace.scrollLeft;
-                const y1 = sourceRect.top + sourceRect.height / 2 - workspaceRect.top + elements.workspace.scrollTop;
-                const x2 = targetRect.left + targetRect.width / 2 - workspaceRect.left + elements.workspace.scrollLeft;
-                const y2 = targetRect.top + targetRect.height / 2 - workspaceRect.top + elements.workspace.scrollTop;
-                
-                let path;
-                
-                if (Math.abs(x1 - x2) < 10) {
-                    path = `M ${x1} ${y1} L ${x2} ${y2}`;
-                } else if (Math.abs(y1 - y2) < 10) {
-                    path = `M ${x1} ${y1} L ${x2} ${y2}`;
-                } else {
-                    const midY = (y1 + y2) / 2;
-                    path = `M ${x1} ${y1} L ${x1} ${midY} L ${x2} ${midY} L ${x2} ${y2}`;
-                }
-                
-                const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                pathEl.setAttribute('d', path);
-                pathEl.setAttribute('fill', 'none');
-                pathEl.setAttribute('stroke', 'rgba(255, 215, 0, 0.4)');
-                pathEl.setAttribute('stroke-width', '2');
-                pathEl.setAttribute('stroke-dasharray', '5, 4');
-                
-                const targetSkill = state.skills.find(s => s.id === targetId);
-                if (skill.rank > 0 && targetSkill && targetSkill.rank > 0) {
-                    pathEl.setAttribute('stroke', '#ffd700');
-                    pathEl.setAttribute('stroke-width', '2.5');
-                    pathEl.setAttribute('stroke-dasharray', 'none');
-                    pathEl.setAttribute('filter', 'drop-shadow(0 0 4px #ffd700)');
-                }
-                
-                svg.appendChild(pathEl);
-            });
+            // Make sure we're centered in the gap above the blockers
+            if (routeY > highestBlockerTop - 5) {
+                routeY = highestBlockerTop - 15;
+            }
+        } else {
+            // Source is above target - route BELOW the blockers
+            // Available space: between lowest blocker's bottom and source's top (or target's top)
+            const upperLimit = lowestBlockerBottom + 10;
+            const lowerLimit = Math.max(sourceBottom, targetBottom, lowestBlockerBottom + 30);
+            routeY = (upperLimit + lowerLimit) / 2;
+            
+            // Make sure we're centered in the gap below the blockers
+            if (routeY < lowestBlockerBottom + 5) {
+                routeY = lowestBlockerBottom + 15;
+            }
         }
+    } else {
+        // No blockers - use midpoint between source and target Y
+        routeY = (startY + endY) / 2;
+    }
+    
+    // Build the path with proper horizontal segments going out and in
+    path = `
+        M ${startX} ${startY}
+        L ${laneX} ${startY}
+        L ${laneX} ${routeY}
+        L ${endX} ${routeY}
+        L ${endX} ${endY}
+    `;
+}
+
+            const pathEl = document.createElementNS(
+                'http://www.w3.org/2000/svg',
+                'path'
+            );
+
+            pathEl.setAttribute('d', path);
+
+            pathEl.setAttribute('fill', 'none');
+
+            pathEl.setAttribute(
+                'stroke',
+                skill.rank > 0 && targetSkill.rank > 0
+                    ? '#ffd700'
+                    : 'rgba(255,215,0,0.4)'
+            );
+
+            pathEl.setAttribute(
+                'stroke-width',
+                skill.rank > 0 && targetSkill.rank > 0
+                    ? '2.5'
+                    : '2'
+            );
+
+            pathEl.setAttribute(
+                'stroke-linejoin',
+                'round'
+            );
+
+            pathEl.setAttribute(
+                'stroke-linecap',
+                'round'
+            );
+
+            pathEl.setAttribute(
+                'stroke-dasharray',
+                skill.rank > 0 && targetSkill.rank > 0
+                    ? 'none'
+                    : '5 4'
+            );
+
+            if (skill.rank > 0 && targetSkill.rank > 0) {
+
+                pathEl.setAttribute(
+                    'filter',
+                    'drop-shadow(0 0 4px #ffd700)'
+                );
+            }
+
+            svg.appendChild(pathEl);
+        });
     });
 }
 
@@ -1185,26 +1394,34 @@ function saveProfile() {
         state: {
             totalXP: state.totalXP,
             spentXP: state.spentXP,
-            isLocked: state.isLocked
+            isLocked: state.isLocked,
+            customChoice: state.customChoice  // 'xp', 'skill', or null
         },
         character: {
             name: elements.charName.value,
             description: elements.charDesc.value,
-            rank:elements.charRank.value,
+            rank: elements.charRank.value,
             portrait: document.getElementById('charPortrait').src
         },
         skills: state.skills.map(skill => ({
             id: skill.id,
             rank: skill.rank,
             type: skill.type
-        }))
+        })),
+        customSkill: state.customSkill ? {
+            id: state.customSkill.id,
+            label: state.customSkill.label,
+            icon: state.customSkill.icon,
+            rank: state.customSkill.rank,
+            maxRank: state.customSkill.maxRank
+        } : null
     };
     
     const blob = new Blob([JSON.stringify(profileData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${profileData.character.name}.json`;
+    a.download = `${profileData.character.name.replace(/[^a-z0-9]/gi, '_')}.json`;
     a.click();
     URL.revokeObjectURL(url);
 }
@@ -1215,32 +1432,19 @@ function loadProfile(file) {
         try {
             const data = JSON.parse(e.target.result);
 
-            // -------------------
             // STATE RESTORE
-            // -------------------
             state.totalXP = data.state?.totalXP ?? 0;
             state.spentXP = data.state?.spentXP ?? 0;
             state.isLocked = data.state?.isLocked ?? false;
+            state.customChoice = data.state?.customChoice ?? null;  // 'xp', 'skill', or null
 
-            // -------------------
             // CHARACTER DATA
-            // -------------------
-            if (data.character?.name) {
-                elements.charName.value = data.character.name;
-                document.getElementById('charNameFull').textContent = data.character.name;
-            }
-            if (data.character?.portrait) {
-                document.getElementById('charPortrait').src = data.character.portrait;
-            }
-            if (data.character?.description) {
-                document.getElementById('charDesc').textContent = data.character.description;
-            }
-            if (data.character?.rank) {
-                document.getElementById('charRank').value = data.character.rank;
-            }
-            // -------------------
+            if (data.character?.name) elements.charName.value = data.character.name;
+            if (data.character?.portrait) document.getElementById('charPortrait').src = data.character.portrait;
+            if (data.character?.description) elements.charDesc.value = data.character.description;
+            if (data.character?.rank) elements.charRank.value = data.character.rank;
+            
             // SKILLS RESTORE
-            // -------------------
             state.skills.forEach(skill => {
                 const saved = data.skills?.find(s => s.id === skill.id);
                 if (saved) {
@@ -1251,16 +1455,67 @@ function loadProfile(file) {
                 }
             });
 
-            // -------------------
-            // FULL REBUILD (IMPORTANT)
-            // -------------------
+            // CUSTOM SKILL RESTORE
+            if (data.customSkill) {
+                state.customSkill = {
+                    id: data.customSkill.id || 'custom',
+                    label: data.customSkill.label || 'Custom Skill',
+                    icon: data.customSkill.icon || 'icons/default-skill.png',
+                    rank: data.customSkill.rank || 2,
+                    maxRank: data.customSkill.maxRank || 5
+                };
+            }
+
+            // RESTORE UI BASED ON CHOICE
+            const btn = document.getElementById("xpOrSkillBtn");
+            const statusBox = document.getElementById("customChoiceStatus");
+            const statusText = document.getElementById("customChoiceText");
+            const removeBtn = document.getElementById("removeXpChoiceBtn");
+            const slotFilled = document.getElementById("skillSlotFilled");
+            const slotEmpty = document.getElementById("skillSlotEmpty");
+
+            if (state.customChoice === 'xp') {
+                // XP choice was made
+                if (btn) btn.style.display = "none";
+                if (statusBox) statusBox.style.display = "flex";
+                if (statusText) statusText.textContent = "Choice locked: +2 XP gained";
+                if (removeBtn) removeBtn.style.display = "flex";
+                if (slotEmpty) slotEmpty.classList.add("hidden");
+                /*if (slotFilled) {
+                    slotFilled.classList.remove("hidden");
+                    const icon = document.getElementById("customSkillIcon");
+                    const name = document.getElementById("customSkillName");
+                    if (icon) {
+                        icon.src = "icons/xp-icon.png";
+                        icon.style.border = "3px solid gold";
+                        icon.style.boxShadow = "0 0 12px gold";
+                    }
+                    if (name) name.textContent = "+2 XP BONUS";
+                }*/
+            } else if (state.customChoice === 'skill') {
+                // Skill choice was made
+                if (btn) btn.style.display = "none";
+                if (statusBox) statusBox.style.display = "flex";
+                if (statusText) statusText.textContent = "Choice locked: Custom Skill created";
+                if (removeBtn) removeBtn.style.display = "flex";
+                renderCustomSkill();
+            } else {
+                // No choice made yet
+                if (btn) btn.style.display = "flex";
+                if (statusBox) statusBox.style.display = "none";
+                if (slotFilled) slotFilled.classList.add("hidden");
+                if (slotEmpty) slotEmpty.classList.remove("hidden");
+                if (removeBtn) removeBtn.style.display = "none";
+            }
+
+            // FULL REBUILD
             recalculateXP();
             updateAll();
             renderSkillTree();
             drawConnections();
 
         } catch (err) {
-            console.error(err);
+            console.error('Error loading profile:', err);
             alert("Invalid or corrupted profile file.");
         }
     };
@@ -1352,7 +1607,6 @@ function createCustomSkill() {
     const name = prompt("Name your custom skill:");
     if (!name) return;
 
-    // ✅ ALWAYS create a fresh input
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
@@ -1378,21 +1632,19 @@ function createCustomSkill() {
                 maxRank: 5
             };
 
-            state.customSkillUsed = true;
+            state.customChoice = 'skill';
 
             renderCustomSkill();
             setCustomChoiceDisplay("skill");
             lockCustomChoice("skill");
 
-            // ✅ CLEANUP
             document.body.removeChild(input);
         };
 
         reader.readAsDataURL(file);
     });
 
-    // 🔥 important: slight delay makes it 100% reliable
-     document.getElementById("removeXpChoiceBtn").style.display = "none";
+    document.getElementById("removeXpChoiceBtn").style.display = "none";
     setTimeout(() => input.click(), 0);
 }
 function setCustomChoiceDisplay(type) {
@@ -1405,104 +1657,66 @@ function setCustomChoiceDisplay(type) {
 
     if (type === "xp") {
         text.textContent = "Choice locked: +2 XP gained";
-           document.getElementById("removeXpChoiceBtn").style.display = "flex";
-    }
-
-    if (type === "skill") {
+        document.getElementById("removeXpChoiceBtn").style.display = "flex";
+    } else if (type === "skill") {
         text.textContent = "Choice locked: Custom Skill created";
+        document.getElementById("removeXpChoiceBtn").style.display = "flex";
     }
-    
 }
 function lockCustomChoice(type) {
-    state.customSkillUsed = true;
-
+    state.customChoice = type;  // 'xp' or 'skill'
+    
     const btn = document.getElementById("xpOrSkillBtn");
     if (btn) btn.style.display = "none";
-
-    const status = document.createElement("div");
-    status.className = "custom-choice-status";
-
-    if (type === "xp") {
-        status.textContent = "Choice locked: +2 XP gained";
-    } else {
-        status.textContent = "Choice locked: Custom skill created";
-    }
-
-    //document.querySelector(".character-sidebar").appendChild(status);
 }
 function renderCustomSkill() {
     const icon = document.getElementById("customSkillIcon");
     const name = document.getElementById("customSkillName");
     const slot = document.getElementById("skillSlotFilled");
     const empty = document.getElementById("skillSlotEmpty");
-    const container = document.getElementById("customSkillSlot");
 
     // XP MODE
-    if (state.customXPBonus) {
+    if (state.customChoice === 'xp') {
         icon.src = "icons/xp-icon.png";
         name.textContent = "+2 XP BONUS";
-
         icon.style.border = "3px solid gold";
         icon.style.boxShadow = "0 0 12px gold";
-
         empty.classList.add("hidden");
         slot.classList.remove("hidden");
-      
         return;
     }
 
     // SKILL MODE
-    if (!state.customSkill) return;
+    if (state.customChoice === 'skill' && state.customSkill) {
+        const skill = state.customSkill;
+        icon.src = skill.icon;
+        name.textContent = skill.label;
 
-    const skill = state.customSkill;
+        const levelColors = {
+            0: { border: '#555', shadow: '0 0 5px rgba(0,0,0,0.5)', width: '2px' },
+            1: { border: '#ffffff', shadow: '0 0 12px #ffffff', width: '3px' },
+            2: { border: '#3fff00', shadow: '0 0 14px #3fff00', width: '3px' },
+            3: { border: '#1e90ff', shadow: '0 0 16px #1e90ff', width: '3px' },
+            4: { border: '#ffd700', shadow: '0 0 18px #ffd700', width: '3px' },
+            5: { border: '#bf00ff', shadow: '0 0 22px #bf00ff', width: '3px' }
+        };
 
-    icon.src = skill.icon;
-    name.textContent = skill.label;
+        const level = skill.rank || 0;
+        const colors = levelColors[level];
+        icon.style.borderColor = colors.border;
+        icon.style.borderWidth = colors.width;
+        icon.style.boxShadow = colors.shadow;
+        icon.style.borderStyle = 'solid';
+        icon.style.animation = level === 5 ? 'pulse-glow 2s ease-in-out infinite' : '';
 
-    // Apply level-based styling
-    const levelColors = {
-        0: { border: '#555', shadow: '0 0 5px rgba(0,0,0,0.5)', width: '2px' },
-        1: { border: '#ffffff', shadow: '0 0 12px #ffffff', width: '3px' },
-        2: { border: '#3fff00', shadow: '0 0 14px #3fff00', width: '3px' },
-        3: { border: '#1e90ff', shadow: '0 0 16px #1e90ff', width: '3px' },
-        4: { border: '#ffd700', shadow: '0 0 18px #ffd700', width: '3px' },
-        5: { border: '#bf00ff', shadow: '0 0 22px #bf00ff', width: '3px' }
-    };
+        const nameColors = { 0: '#ffffff', 1: '#ffffff', 2: '#3fff00', 3: '#1e90ff', 4: '#ffd700', 5: '#bf00ff' };
+        name.style.color = nameColors[level] || '#ffffff';
+        name.textContent = skill.label;
 
-    const level = skill.rank || 0;
-    const colors = levelColors[level];
-
-    icon.style.borderColor = colors.border;
-    icon.style.borderWidth = colors.width;
-    icon.style.boxShadow = colors.shadow;
-    icon.style.borderStyle = 'solid';
-
-    // Add pulse animation for level 5
-    if (level === 5) {
-        icon.style.animation = 'pulse-glow 2s ease-in-out infinite';
-    } else {
-        icon.style.animation = '';
+        empty.classList.add("hidden");
+        slot.classList.remove("hidden");
+        slot.onclick = () => upgradeCustomSkill();
     }
-
-    // Update name color based on level
-    const nameColors = {
-        0: '#ffffff',
-        1: '#ffffff',
-        2: '#3fff00',
-        3: '#1e90ff',
-        4: '#ffd700',
-        5: '#bf00ff'
-    };
-    name.style.color = nameColors[level] || '#ffffff';
-
-    // Show level indicator
-    name.textContent = `${skill.label}`;
-
-    empty.classList.add("hidden");
-    slot.classList.remove("hidden");
-
-    // click to level up
-    slot.onclick = () => upgradeCustomSkill();
 }
 function upgradeCustomSkill() {
     const skill = state.customSkill;
@@ -1534,15 +1748,14 @@ function upgradeCustomSkill() {
     updateAll();
     renderCustomSkill();
 }
-    function gainCustomXP() {
-        saveHistory();
-        state.totalXP += 2;
-        state.customSkillUsed = true;
-        state.customXPBonus = true;
-        updateAll();
-    } 
- document.getElementById("xpOrSkillBtn").addEventListener("click", () => {
-    if (state.customSkillUsed) {
+  function gainCustomXP() {
+    saveHistory();
+    state.totalXP += 2;
+    state.customChoice = 'xp';
+    updateAll();
+}
+document.getElementById("xpOrSkillBtn").addEventListener("click", () => {
+    if (state.customChoice) {
         alert("You already made this choice.");
         return;
     }
@@ -1556,39 +1769,33 @@ function upgradeCustomSkill() {
     if (choice) {
         gainCustomXP();
         setCustomChoiceDisplay("xp");
-        // ✅ CALL HERE
         lockCustomChoice("xp");
-
     } else {
         createCustomSkill();
-       
-        
     }
 });
 function removeCustomChoice() {
-    if (!state.customSkill && !state.customXPBonus) return;
+    if (!state.customChoice) return;
 
     if (!confirm("Remove this choice?")) return;
 
     saveHistory();
 
-    // 🔥 remove XP choice
-    if (state.customXPBonus) {
+    if (state.customChoice === 'xp') {
         state.totalXP -= 2;
-        state.customXPBonus = false;
     }
 
-    // 🔥 remove skill choice
-    if (state.customSkill) {
+    if (state.customChoice === 'skill') {
         state.customSkill = null;
     }
 
-    state.customSkillUsed = false;
+    state.customChoice = null;
+
     document.getElementById("customChoiceStatus").style.display = "none";
     document.getElementById("skillSlotFilled").classList.add("hidden");
     document.getElementById("skillSlotEmpty").classList.remove("hidden");
     document.getElementById("xpOrSkillBtn").style.display = "flex";
-     document.getElementById("removeXpChoiceBtn").style.display = "none";
+    document.getElementById("removeXpChoiceBtn").style.display = "none";
 
     updateAll();
 }
