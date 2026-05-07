@@ -49,7 +49,7 @@ const state = {
         
         { id: 'force_bubble', tier: 4, icon: 'icons/force_bubble.webp',  row: 1, col: 18,  rank: 0, type: 'hp', label: 'Force Bubble', connectsTo: ['force_maelstrom'] },
         { id: 'dominate_mind', tier: 4, icon: 'icons/dominate_mind.png', row: 2, col: 18, rank: 0, type: 'rb', label: 'Dominate Mind', connectsTo: [] },
-        { id: 'dark_healing', tier: 4, icon: 'icons/dark_healing.png',  row: 1, col: 19,  rank: 0, type: 'hp', label: 'Dark Healing', connectsTo: ['force_maelstrom'] },
+        { id: 'dark_healing', tier: 4, icon: 'icons/dark_healing.png',  row: 1, col: 19,  rank: 0, type: 'hp', label: 'Dark Healing', connectsTo: [] },
         { id: 'drain_life', tier: 4, icon: 'icons/drain_life.png', row: 2, col: 19, rank: 0, type: 'rb', label: 'Drain Life', connectsTo: ['dark_healing','death_field'] },
         // TIER 3 - Officer Corps
 
@@ -60,7 +60,7 @@ const state = {
         { id: 'surgery', tier: 3, icon: 'icons/surgery.webp', row: 3, col: 8,  rank: 0, type: 'rb', label: 'Surgery', connectsTo: ['bioengineering'] },
         { id: 'poisons', tier: 3, icon: 'icons/poisons.png', row: 3, col: 9,  rank: 0, type: 'rb', label: 'Poisons & Toxins', connectsTo: ['bioengineering'], description: 'This skill represents a character’s ability to formulate, handle and utilise poisonous and toxic substances safely to themselves and their allies inside and out of combat. This may also include the knowledge of how to counter, treat or cure the ill-effects of such substances.' },
        { id: 'sorcery', tier: 3, icon: 'icons/sith_sorcery.png', row: 3, col: 14,  rank: 0, type: 'rb', label: 'Sorcery', connectsTo: [] },
-         { id: 'alchemy', tier: 3, icon: 'icons/sith_alchemy.png', row: 3, col: 19,  rank: 0, type: 'rb', label: 'Alchemy', connectsTo: [] },
+         { id: 'alchemy', tier: 3, icon: 'icons/sith_alchemy.png', row: 3, col: 17,  rank: 0, type: 'rb', label: 'Alchemy', connectsTo: [] },
         // TIER 2 - Advanced Training
       
         { id: 'shield', tier: 2, icon: 'icons/shield.webp', rank: 0, type: 'rb', row: 5, col: 0,  label: 'Shield', connectsTo: [], effects: { xp: -3, hp: +1 } },
@@ -906,13 +906,11 @@ function drawConnections() {
 
             if (!sourceEdges || !targetEdges) return;
 
-            // -----------------------------------
-            // SAME COLUMN
-            // -----------------------------------
-
-            // -----------------------------------
+   
 // SAME COLUMN
 // -----------------------------------
+
+// Replace the entire SAME COLUMN section with this:
 
 if (colDiff === 0) {
 
@@ -922,6 +920,7 @@ if (colDiff === 0) {
     const minRow = Math.min(skill.row, targetSkill.row);
     const maxRow = Math.max(skill.row, targetSkill.row);
 
+    // Find ALL skills in this column between source and target
     const blockingSkills = state.skills.filter(s =>
         s.id !== skill.id &&
         s.id !== targetId &&
@@ -931,46 +930,40 @@ if (colDiff === 0) {
     );
 
     if (blockingSkills.length > 0) {
-        // Find all skills in adjacent columns to determine the gap center
-        const adjacentCol = skill.col + 1;
-        const adjacentSkills = state.skills.filter(s => s.col === adjacentCol);
-        
+        // Find gap on either side
         let laneX;
-        if (adjacentSkills.length > 0) {
-            // Find the closest adjacent skill to calculate the true column width
-            const adjEl = document.querySelector(`[data-skill-id="${adjacentSkills[0].id}"]`);
-            if (adjEl) {
-                const adjRect = adjEl.getBoundingClientRect();
-                const adjCenterX = adjRect.left + adjRect.width / 2 - workspaceRect.left + elements.workspace.scrollLeft;
-                laneX = (sx + adjCenterX) / 2; // Exact center of the gap
-            } else {
-                laneX = sx + colWidth * 0.5;
-            }
+        
+        // Try right side first
+        const rightSkills = state.skills.filter(s => s.col === skill.col + 1 && s.row >= minRow && s.row <= maxRow);
+        const leftSkills = state.skills.filter(s => s.col === skill.col - 1 && s.row >= minRow && s.row <= maxRow);
+        
+        // Check if right side has space
+        if (rightSkills.length === 0) {
+            // No skills on right - use fixed offset
+            laneX = sourceEdges.right + 30;
         } else {
-            laneX = sx + colWidth * 0.5;
+            // Find the closest right skill to calculate gap center
+            const rightEl = document.querySelector(`[data-skill-id="${rightSkills[0].id}"]`);
+            if (rightEl) {
+                const rightRect = rightEl.getBoundingClientRect();
+                const rightLeft = rightRect.left - workspaceRect.left + elements.workspace.scrollLeft;
+                laneX = (sourceEdges.right + rightLeft) / 2;
+            } else {
+                laneX = sourceEdges.right + 30;
+            }
         }
 
-        // Route Y - center in the available space between source and target
-        const blockerEdges = blockingSkills.map(s => getSkillEdges(s)).filter(e => e !== null);
-        const firstBlockerEdge = rowDiff > 0 
-            ? Math.min(...blockerEdges.map(e => e.top))
-            : Math.max(...blockerEdges.map(e => e.bottom));
-        
-        // Center the vertical segment between source edge and first blocker edge
-        const routeY = rowDiff > 0
-            ? (sourceEdges.bottom + firstBlockerEdge) / 2
-            : (sourceEdges.top + firstBlockerEdge) / 2;
-
+        // Use direct top/bottom exit
         path = `
-            M ${sx} ${startY}
+            M ${sourceEdges.centerX} ${startY}
             L ${laneX} ${startY}
             L ${laneX} ${endY}
-            L ${sx} ${endY}
+            L ${targetEdges.centerX} ${endY}
         `;
     } else {
         path = `
-            M ${sx} ${startY}
-            L ${sx} ${endY}
+            M ${sourceEdges.centerX} ${startY}
+            L ${targetEdges.centerX} ${endY}
         `;
     }
 }
