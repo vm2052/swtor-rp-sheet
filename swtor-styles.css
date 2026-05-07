@@ -504,21 +504,39 @@ button:hover {
     gap: 12px;
     font-weight: bold;
 }
-.connection-path {
-    transition: all 0.3s ease;
+/* Dim non-highlighted connections when hovering any skill */
+.skill-workspace:has(.skill-node:hover) .connection-path:not(.highlighted-connection) {
+    opacity: 0.1;
 }
 
+/* Dim non-connected skills when hovering */
+.skill-workspace:has(.skill-node:hover) .skill-node:not(.connected-skill-highlight):not(.active-hover-skill):not(:hover) {
+    opacity: 0.4;
+    filter: grayscale(50%);
+}
+
+/* Connected skill highlight */
+.connected-skill-highlight {
+    transform: scale(1.1) !important;
+    z-index: 15 !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7) !important;
+    animation: none !important;
+}
+
+/* Active hovered skill */
+.active-hover-skill {
+    border-color: #ffffff !important;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Connection path highlight */
 .connection-path.highlighted-connection {
     stroke: #ffffff !important;
-    stroke-width: 4px !important;
+    stroke-width: 3.5px !important;
     stroke-dasharray: none !important;
-    filter: drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 15px #ffd700) !important;
+    filter: drop-shadow(0 0 6px #ffffff) drop-shadow(0 0 12px #ffd700) !important;
     opacity: 1 !important;
-}
-
-/* Dim non-highlighted connections when hovering */
-.skill-workspace:has(.skill-node:hover) .connection-path:not(.highlighted-connection) {
-    opacity: 0.15;
 }
 .tier-ranks {
     font-size: 0.85em;
