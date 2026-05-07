@@ -472,7 +472,33 @@ node.onmouseenter = () => {
     `;
  
 };
+// In createSkillNode(), add these alongside the existing mouseenter/mouseleave for tooltips:
 
+// Highlight connections on hover
+node.addEventListener('mouseenter', () => {
+    // Highlight all connections going FROM this skill
+    if (skill.connectsTo && skill.connectsTo.length > 0) {
+        skill.connectsTo.forEach(targetId => {
+            const paths = document.querySelectorAll(
+                `.connection-path[data-connection-source="${skill.id}"][data-connection-target="${targetId}"]`
+            );
+            paths.forEach(p => p.classList.add('highlighted-connection'));
+        });
+    }
+    
+    // Highlight all connections going TO this skill
+    const incomingPaths = document.querySelectorAll(
+        `.connection-path[data-connection-target="${skill.id}"]`
+    );
+    incomingPaths.forEach(p => p.classList.add('highlighted-connection'));
+});
+
+node.addEventListener('mouseleave', () => {
+    // Remove highlight from all connections
+    document.querySelectorAll('.highlighted-connection').forEach(p => {
+        p.classList.remove('highlighted-connection');
+    });
+});
 node.onmousemove = (e) => {
     tooltip.style.left = (e.pageX + 85) + 'px';
     tooltip.style.top = (e.pageY -130) + 'px';
@@ -1044,7 +1070,11 @@ else {
             if (skill.rank > 0 && targetSkill.rank > 0) {
                 pathEl.setAttribute('filter', 'drop-shadow(0 0 4px #ffd700)');
             }
+        pathEl.setAttribute('data-connection-source', skill.id);
+        pathEl.setAttribute('data-connection-target', targetId);
+        pathEl.classList.add('connection-path');
 
+        svg.appendChild(pathEl);
             svg.appendChild(pathEl);
         });
     });

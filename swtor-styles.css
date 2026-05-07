@@ -504,6 +504,22 @@ button:hover {
     gap: 12px;
     font-weight: bold;
 }
+.connection-path {
+    transition: all 0.3s ease;
+}
+
+.connection-path.highlighted-connection {
+    stroke: #ffffff !important;
+    stroke-width: 4px !important;
+    stroke-dasharray: none !important;
+    filter: drop-shadow(0 0 8px #ffffff) drop-shadow(0 0 15px #ffd700) !important;
+    opacity: 1 !important;
+}
+
+/* Dim non-highlighted connections when hovering */
+.skill-workspace:has(.skill-node:hover) .connection-path:not(.highlighted-connection) {
+    opacity: 0.15;
+}
 .tier-ranks {
     font-size: 0.85em;
     opacity: 0.8;
