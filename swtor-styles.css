@@ -35,7 +35,7 @@ body, html {
     height: 100%;
     background: var(--bg-primary);
     color: var(--sw-blue);
-    font-family: 'Arial', 'Segoe UI', sans-serif;
+    font-family: 'Arial';
     overflow-x: auto;
     overflow-y: auto;
 }
@@ -952,9 +952,7 @@ button:hover {
     letter-spacing: 1px;
      text-shadow: 0 0 8px var(--sw-gold);
 }
-.char-field input#charRank {
-    text-shadow: 0 0 8px var(--sw-gold);
-}
+ 
 .char-field input,
 .char-field textarea {
     background: rgba(123, 104, 238, 0.06);
