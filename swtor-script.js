@@ -4,7 +4,7 @@
 
 const state = {
     isLocked: false,
-    totalXP: 25,
+    totalXP: 7,
     spentXP: 0,
     maxXP: 125,
     history: [],
