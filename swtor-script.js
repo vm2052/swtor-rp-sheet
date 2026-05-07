@@ -49,8 +49,8 @@ const state = {
         
         { id: 'force_bubble', tier: 4, icon: 'icons/force_bubble.webp',  row: 1, col: 18,  rank: 0, type: 'hp', label: 'Force Bubble', connectsTo: ['force_maelstrom'] },
         { id: 'dominate_mind', tier: 4, icon: 'icons/dominate_mind.png', row: 2, col: 18, rank: 0, type: 'rb', label: 'Dominate Mind', connectsTo: [] },
-        { id: 'dark_healing', tier: 4, icon: 'icons/dark_healing.webp',  row: 1, col: 18,  rank: 0, type: 'hp', label: 'Dark Healing', connectsTo: ['force_maelstrom'] },
-        { id: 'drain_life', tier: 4, icon: 'icons/drain_life.png', row: 2, col: 18, rank: 0, type: 'rb', label: 'Drain Life', connectsTo: ['dark_healing','death_field'] },
+        { id: 'dark_healing', tier: 4, icon: 'icons/dark_healing.png',  row: 1, col: 19,  rank: 0, type: 'hp', label: 'Dark Healing', connectsTo: ['force_maelstrom'] },
+        { id: 'drain_life', tier: 4, icon: 'icons/drain_life.png', row: 2, col: 19, rank: 0, type: 'rb', label: 'Drain Life', connectsTo: ['dark_healing','death_field'] },
         // TIER 3 - Officer Corps
 
         { id: 'tactics', tier: 3, icon: 'icons/tactics.png', row: 3, col: 2,  rank: 0, type: 'rb', label: 'Tactics', connectsTo: ['stategic_leadership'] },
