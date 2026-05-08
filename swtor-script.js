@@ -23,9 +23,9 @@ const state = {
     // All skills defined with connections
     skills: [
         // TIER 5 - High Command
-        { id: 'resilience', tier: 4, icon: 'icons/resilience.webp', row: 2, col: 0,  rank: 0, type: 'normal', label: 'Resilience', connectsTo: [], effects: { xp: -3, hp: +1 },description: 'This skill represents a character’s physical and mental tenacity, such as the ability to endure or shrug off injuries as well as mental effects that harm.' },
-        { id: 'annihilation', tier: 5, icon: 'icons/annihilation.webp', row: 0, col: 6,  rank: 0, type: 'normal', label: 'Annihilation', connectsTo: [], effects: { xp: -4, rb: +1 } },
-        { id: 'bioengineering', tier: 5, icon: 'icons/bioengineering.webp', row: 0, col: 8,  rank: 0, type: 'normal', label: 'BioEngineering', connectsTo: [], effects: { xp: -4, rb: +1 } },
+       
+        { id: 'annihilation', tier: 5, icon: 'icons/annihilation.webp', row: 0, col: 6,  rank: 0, type: 'normal', label: 'Annihilation', connectsTo: [], effects: { xp: -4, rb: +1 } , description: 'This skill represents a character’s ability to authorize and gain clearance to order the annihilation of a populace or planet through, such as via orbital bombardment.'},
+        { id: 'bioengineering', tier: 5, icon: 'icons/bioengineering.webp', row: 0, col: 8,  rank: 0, type: 'normal', label: 'BioEngineering', connectsTo: [], effects: { xp: -4, rb: +1 }, description: 'This skill represents a character’s ability to safely create ways to interact with, and edit a living creature’s biology, such as the use of genetic modification, design of sensor equipment and growing of creatures and organs.' },
         { id: 'authority', tier: 5, icon: 'icons/authority.webp', row: 0, col: 11,  rank: 0, type: 'normal', label: 'Authority', connectsTo: [] , effects: { xp: -4, rb: +1 }, description: 'This skill represents a character’s ability to utilise their actual or perceived status to influence and direct the actions of others. Such as through the issuing of orders. '},
         { id: 'broken_chains', tier: 5, icon: 'icons/broken_chains.png', row: 0, col: 14,  rank: 0, type: 'normal', label: 'Broken Chains', connectsTo: [], effects: { xp: -4, rb: +1 } },
         { id: 'forged', tier: 5, icon: 'icons/forged.png', row: 0, col: 15,  rank: 0, type: 'normal', label: 'Forged', connectsTo: [], effects: { xp: -3, hp: +1 } },
@@ -35,9 +35,9 @@ const state = {
             { id: 'death_field', tier: 5, icon: 'icons/death_field.png', row: 0, col: 19,  rank: 0, type: 'normal', label: 'Death Field', connectsTo: [] },
         // TIER 4 - Lord & Commander
 
-        { id: 'strategic_leadership', tier: 4, icon: 'icons/strategic_leadership.png',  row: 2, col: 2,  rank: 0, type: 'rb', label: 'Strategic Leadership', connectsTo: [], effects: { xp: -4, rb: +1 }, description: 'This skill represents a character’s ability to make assessments of a situation and coordinate a team of subordinates clearly and effectively. ' },
+        { id: 'stategic_leadership', tier: 4, icon: 'icons/strategic_leadership.png',  row: 2, col: 2,  rank: 0, type: 'rb', label: 'Strategic Leadership', connectsTo: [], effects: { xp: -4, rb: +1 }, description: 'This skill represents a character’s ability to assess a given situation, set long-term objectives, and effectively coordinate subordinates to achieve them. It encompasses planning, resource allocation, and maintaining team morale, ensuring a clear direction towards ultimate victory.' },
         { id: 'psychological_warfare', tier: 4, icon: 'icons/psychological_warfare.png', row: 2, col: 11,  rank: 0, type: 'rb', label: 'Psychological Warfare', connectsTo: ['authority'] , description: 'This skill represents a character’s ability to intimidate, coerce and confuse others on a large scale, demoralising or changing the beliefs of entire target populations, such as through the use of propaganda.'},
-        
+         { id: 'resilience', tier: 4, icon: 'icons/resilience.webp', row: 2, col: 0,  rank: 0, type: 'normal', label: 'Resilience', connectsTo: [], effects: { xp: -3, hp: +1 },description: 'This skill represents a character’s physical and mental tenacity, such as the ability to endure or shrug off injuries as well as mental effects that harm.' },
         { id: 'force_repulse', tier: 4, icon: 'icons/force_repulse.jpg',  row: 1, col: 14,  rank: 0, type: 'rb', label: 'Force Repulse', connectsTo: ['force_maelstrom'] },
         { id: 'force_burst', tier: 4, icon: 'icons/force_burst.png', row: 2, col: 14, rank: 0, type: 'rb', label: 'Force Burst', connectsTo: ['force_repulse'] },
         { id: 'force_whirlwind', tier: 4, icon: 'icons/force_whirlwind.png',  row: 1, col: 15,  rank: 0, type: 'rb', label: 'Force Whirlwind', connectsTo: [] },
@@ -53,64 +53,64 @@ const state = {
         { id: 'drain_life', tier: 4, icon: 'icons/drain_life.png', row: 2, col: 19, rank: 0, type: 'rb', label: 'Drain Life', connectsTo: ['dark_healing','death_field'] },
         // TIER 3 - Officer Corps
 
-        { id: 'tactics', tier: 3, icon: 'icons/tactics.png', row: 3, col: 2,  rank: 0, type: 'rb', label: 'Tactics', connectsTo: ['stategic_leadership'] },
+        { id: 'tactics', tier: 3, icon: 'icons/tactics.png', row: 3, col: 2,  rank: 0, type: 'rb', label: 'Tactics', connectsTo: ['stategic_leadership'] , description:'This skill represents a character’s ability to accurately and efficiently read a battlefield to ascertain the ideal course of action. This includes identifying weaknesses in enemy lines, predicting opponent’s next moves, planning evasive maneuvers or attacks, and capitalizing on immediate opportunities to gain tactical advantage'}, 
         
-        { id: 'marine_engineering', tier: 3, icon: 'icons/marine_engineering.webp', row: 3, col: 6,  rank: 0, type: 'rb', label: 'Marine Engineering', connectsTo: ['annihilation'] },
-        { id: 'remote_control', tier: 3, icon: 'icons/remote_control.webp', row: 3, col: 7,  rank: 0, type: 'rb', label: 'Remote Control', connectsTo: [], description: 'This skill represents a character’s ability to access and control technological systems, such as that of droids or security networks remotely. ' },
-        { id: 'surgery', tier: 3, icon: 'icons/surgery.webp', row: 3, col: 8,  rank: 0, type: 'rb', label: 'Surgery', connectsTo: ['bioengineering'] },
+        { id: 'marine_engineering', tier: 3, icon: 'icons/marine_engineering.webp', row: 3, col: 6,  rank: 0, type: 'rb', label: 'Marine Engineering', connectsTo: ['annihilation'], description: 'This skill represents a character’s ability to identify different types of ships, efficiently repair, upgrade and maintain naval systems such as Flagships and Starfighters, ranging from their engines and hull integrity to auxiliary systems like weaponry.' },
+        { id: 'remote_control', tier: 2, icon: 'icons/remote_control.webp', row: 4, col: 7,  rank: 0, type: 'rb', label: 'Remote Control', connectsTo: [], description: 'This skill represents a character’s ability to access and control technological systems, such as that of droids or security networks remotely. ' },
+        { id: 'surgery', tier: 3, icon: 'icons/surgery.webp', row: 3, col: 8,  rank: 0, type: 'rb', label: 'Surgery', connectsTo: ['bioengineering'] , description: 'This skill represents a character’s ability to accurately and safely carry out intensive and invasive critical medical procedures through the alteration of tissue and other bodily structures.'},
         { id: 'poisons', tier: 3, icon: 'icons/poisons.png', row: 3, col: 9,  rank: 0, type: 'rb', label: 'Poisons & Toxins', connectsTo: ['bioengineering'], description: 'This skill represents a character’s ability to formulate, handle and utilise poisonous and toxic substances safely to themselves and their allies inside and out of combat. This may also include the knowledge of how to counter, treat or cure the ill-effects of such substances.' },
-       { id: 'sorcery', tier: 3, icon: 'icons/sith_sorcery.png', row: 3, col: 14,  rank: 0, type: 'rb', label: 'Sorcery', connectsTo: [] },
-         { id: 'alchemy', tier: 3, icon: 'icons/sith_alchemy.png', row: 3, col: 17,  rank: 0, type: 'rb', label: 'Alchemy', connectsTo: [] },
+      { id: 'false_ls_aura', tier: 3, icon: 'icons/false_ls_aura.webp', rank: 0, type: 'rb', row: 3, col: 16,  label: 'False LS Aura', connectsTo: ['force_cloak'] },
         // TIER 2 - Advanced Training
       
-        { id: 'shield', tier: 2, icon: 'icons/shield.webp', rank: 0, type: 'rb', row: 5, col: 0,  label: 'Shield', connectsTo: [], effects: { xp: -3, hp: +1 } },
+        { id: 'shield', tier: 2, icon: 'icons/shield.webp', rank: 0, type: 'rb', row: 5, col: 0,  label: 'Shield', connectsTo: [], effects: { xp: -3, hp: +1 } , description:'This skill represents a character’s ability to effectively and efficiently protect and cover themselves or others from attack with a mobile solution such as a shield generator, or physical shield eg. riot shields, and improvised shields. '},
         { id: 'darts', tier: 2, icon: 'icons/darts.webp', rank: 0, type: 'rb', row: 5, col: 1,  label: 'Darts', connectsTo: [], description: 'This skill represents a character’s ability to accurately use darts of various types against others or avoid them. ' },
-        { id: 'initiative', tier: 2, icon: 'icons/initiative.png', rank: 0, type: 'rb', row: 5, col: 2,  label: 'Initiative', connectsTo: [] , description: 'This skill represents a character’s ability to both react quickly in response to the surrounding environment and situation. It also provides a bonus when determining the order of actions of different characters.'},
-        { id: 'demolition', tier: 2, icon: 'icons/demolition.webp', rank: 0, type: 'rb', row: 5, col: 3,  label: 'Demolition', connectsTo: [] },
-       { id: 'electronets', tier: 2, icon: 'icons/electronets.webp', row: 4, col: 3,  rank: 0, type: 'rb', label: 'Electronets', connectsTo: [] },
-        { id: 'disarm', tier: 2, icon: 'icons/disarm.webp', rank: 0, type: 'rb', row: 5, col: 4,  label: 'Disarm', connectsTo: [] },
+        { id: 'initiative', tier: 2, icon: 'icons/initiative.png', rank: 0, type: 'rb', row: 5, col: 2,  label: 'Initiative', connectsTo: ['tactics'] , description: 'This skill represents a character’s ability to both react quickly in response to the surrounding environment and situation. It also provides a bonus when determining the order of actions of different characters.'},
+        { id: 'demolition', tier: 2, icon: 'icons/demolition.webp', rank: 0, type: 'rb', row: 5, col: 3,  label: 'Demolition', connectsTo: [] , description: 'This skill represents a character’s ability to safely and effectively handle explosives, such as fixed explosives against infrastructure or large constructs. Demolition also covers the use of laid traps against enemy forces.'},
+       { id: 'electronets', tier: 2, icon: 'icons/electronets.webp', row: 4, col: 3,  rank: 0, type: 'rb', label: 'Electronets', connectsTo: [] , description: 'This skill represents a character’s ability to effectively launch and utilise electronets against enemies or opponents, such as proper entanglement, grouping and precision against moving targets. '},
+        { id: 'disarm', tier: 2, icon: 'icons/disarm.webp', rank: 0, type: 'rb', row: 5, col: 4,  label: 'Disarm', connectsTo: [] , description: ' This skill represents a character’s ability to efficiently and safely remove the weapon of an enemy or opponent. It can also represent the ability to non-lethally stop a combatant from taking action, such as through the injury of limbs.'},
         { id: 'infiltration', tier: 2, icon: 'icons/infiltration.webp', rank: 0, type: 'rb', row: 5, col: 5,  label: 'Infiltration', connectsTo: [] , description: 'This skill represents a character’s ability to conceal their own motivations and intentions, whilst taking actions to covertly carry out actions that serve these goals without drawing notice to themselves. '},
-        { id: 'gunnery', tier: 2, icon: 'icons/gunnery.webp', rank: 0, type: 'rb', row: 5, col: 6,  label: 'Gunnery', connectsTo: ['marine_engineering'] },
-        { id: 'comms_warfare', tier: 2, icon: 'icons/comms_warfare.webp', rank: 0, type: 'rb', row: 5, col: 7,  label: 'Comms Warfare', connectsTo: ['remote_control'] },
+        { id: 'gunnery', tier: 2, icon: 'icons/gunnery.webp', rank: 0, type: 'rb', row: 5, col: 6,  label: 'Gunnery', connectsTo: ['marine_engineering'] , description: 'This skill represents a character’s ability to accurately and effectively fire turrets and gun systems that are part of larger machinery, such as weapon emplacements, starfighter turrets and other vehicle-mounted cannonry.'},
+        { id: 'comms_warfare', tier: 2, icon: 'icons/comms_warfare.webp', rank: 0, type: 'rb', row: 5, col: 7,  label: 'Comms Warfare', connectsTo: ['remote_control'] , description:'This skill represents a character’s ability to effectively and efficiently disrupt, deny or degrade the use of enemy comm systems, gather intelligence on enemy forces and safeguard one’s own.'},
         { id: 'stabilizing_care', tier: 2, icon: 'icons/stabilizing_care.png', rank: 0, type: 'rb', row: 5, col: 8,  label: 'Stabilizing Care', connectsTo: ['surgery'], description: 'This skill represents a character’s ability to stabilise others who are in a degrading and critical condition, such as through resuscitation, defibrillation, administration of life-saving drugs or treatments that prevent the individual from dying.' },
-         { id: 'chemistry', tier: 2, icon: 'icons/chemistry.png', rank: 0, type: 'rb', row: 5, col: 9,  label: 'Chemistry', connectsTo: ['poisons'] },
+         { id: 'chemistry', tier: 2, icon: 'icons/chemistry.png', rank: 0, type: 'rb', row: 5, col: 9,  label: 'Chemistry', connectsTo: ['poisons'], description: 'This skill represents a character’s ability to identify different chemical elements, effectively synthesise medications, drugs, adrenals and stims that are safe for consumption and provide benefits to themselves and their allies.' },
          { id: 'perception', tier: 2, icon: 'icons/perception.png', rank: 0, type: 'rb', row: 5, col: 10,  label: 'Perception', connectsTo: [], description: 'aka Insight: this skill represents a character’s ability to read the body language and expressions of others to gain insight into their motivations, intentions and honesty. It also aids in investigations and detecting details in the environment, helping to learn more about surroundings and the environment itself.' },
-          { id: 'manipulation', tier: 2, icon: 'icons/manipulation.webp', rank: 0, type: 'rb', row: 5, col: 11,  label: 'Manipulation', connectsTo: ['psychological_warfare'] },
+          { id: 'manipulation', tier: 2, icon: 'icons/manipulation.webp', rank: 0, type: 'rb', row: 5, col: 11,  label: 'Manipulation', connectsTo: ['psychological_warfare'] , description: 'This skill represents a character’s ability to lie and deceive others to one’s own advantage. Such convincing the target of a point through the exploitation of weaknesses the character has prior awareness of.'},
          { id: 'offense', tier: 2, icon: 'icons/offense.png', rank: 0, type: 'rb', row: 5, col: 14,  label: 'Offense', connectsTo: [] },
           { id: 'force_scream', tier: 2, icon: 'icons/force_scream.png', rank: 0, type: 'rb', row: 5, col: 15,  label: 'Force Scream', connectsTo: [] },
           { id: 'force_empathy', tier: 2, icon: 'icons/force_empathy.webp', rank: 0, type: 'rb', row: 5, col: 16,  label: 'Force Empathy', connectsTo: [] },
           { id: 'force_lightning', tier: 2, icon: 'icons/force_lightning.png', rank: 0, type: 'rb', row: 5, col: 17,  label: 'Force Lightning', connectsTo: ['force_tempest'] },
           { id: 'force_deflect', tier: 2, icon: 'icons/force_deflect.jpg', rank: 0, type: 'rb', row: 5, col: 18,  label: 'Force Deflect', connectsTo: ['force_bubble'] },
            { id: 'force_slow', tier: 2, icon: 'icons/force_slow.webp', rank: 0, type: 'rb', row: 5, col: 19,  label: 'Force Slow', connectsTo: ['force_stun'] },
-
+        { id: 'sorcery', tier: 2, icon: 'icons/sith_sorcery.png', row:4, col: 16,  rank: 0, type: 'rb', label: 'Sorcery', connectsTo: [] },
+         { id: 'alchemy', tier: 2, icon: 'icons/sith_alchemy.png', row: 3, col: 19,  rank: 0, type: 'rb', label: 'Alchemy', connectsTo: [] },
 
              { id: 'defense', tier: 2, icon: 'icons/defense.webp', rank: 0, type: 'rb', row: 4, col: 14,  label: 'Defense', connectsTo: [] },
             { id: 'force_grip', tier: 2, icon: 'icons/force_grip.webp', rank: 0, type: 'rb', row: 4, col: 15,  label: 'Force Grip', connectsTo: ['force_choke'] },
-             { id: 'force_stealth', tier: 2, icon: 'icons/force_stealth.png', rank: 0, type: 'rb', row: 4, col: 16,  label: 'Force Stealth', connectsTo: ['false_ls_aura'] },
+             { id: 'force_stealth', tier: 2, icon: 'icons/force_stealth.png', rank: 0, type: 'rb', row: 3, col: 16,  label: 'Force Stealth', connectsTo: ['false_ls_aura'] },
               { id: 'alter_environment', tier: 2, icon: 'icons/alter_environment.webp', rank: 0, type: 'rb', row: 4, col: 17,  label: 'Alter Environment', connectsTo: ['pyrokinesis'] },
            { id: 'force_illusion', tier: 2, icon: 'icons/force_illusion.png', rank: 0, type: 'rb', row: 4, col: 18,  label: 'Force Illusion', connectsTo: ['mind_trick'] },
         { id: 'force_stun', tier: 2, icon: 'icons/force_stun.webp', rank: 0, type: 'rb', row: 4, col: 19,  label: 'Force Stun', connectsTo: [] },
 
              { id: 'maneuver', tier: 2, icon: 'icons/maneuver.webp', rank: 0, type: 'rb', row: 3, col: 14,  label: 'Maneuver', connectsTo: [] },
             { id: 'force_choke', tier: 2, icon: 'icons/force_choke.png', rank: 0, type: 'rb', row: 3, col: 15,  label: 'Force Choke', connectsTo: ['force_crush'] },
-             { id: 'false_ls_aura', tier: 2, icon: 'icons/false_ls_aura.webp', rank: 0, type: 'rb', row: 3, col: 16,  label: 'False LS Aura', connectsTo: ['force_cloak'] },
+         
               { id: 'pyrokinesis', tier: 2, icon: 'icons/pyrokinesis.png', rank: 0, type: 'rb', row: 3, col: 17,  label: 'Pyrokinesis', connectsTo: [] },
            { id: 'mind_trick', tier: 2, icon: 'icons/mind_trick.png', rank: 0, type: 'rb', row: 3, col: 18,  label: 'Mind Trick', connectsTo: ['dominate_mind'] },
-        { id: 'drain_force', tier: 2, icon: 'icons/drain_force.png', rank: 0, type: 'rb', row: 3, col: 19,  label: 'Drain Force', connectsTo: ['drain_life'] },
+        { id: 'drain_force', tier: 3, icon: 'icons/drain_force.png', rank: 0, type: 'rb', row: 3, col: 19,  label: 'Drain Force', connectsTo: ['drain_life'] },
 
 
         // TIER 1 - Basic Training
         { id: 'agility', tier: 1, icon: 'icons/agility.webp', row:7, col: 0, rank: 0, type: 'hp', label: 'Agility', connectsTo: [], description: 'This skill represents a character’s ability to evade harm, such as falling obstacles, as well as carry out more acrobatic feats such as climbing walls or jumping gaps.' },
          { id: 'strength', tier: 1, icon: 'icons/strength.webp', row:8, rank: 0, col: 0, type: 'normal', label: 'Strength', connectsTo: [], description: 'This skill represents a character’s ability to exert themselves physically, such as the lifting and moving of heavy objects.' },
-        { id: 'blasters', tier: 1, icon: 'icons/blasters.webp', row:7, col: 1, rank: 0, type: 'hp', label: 'Blasters', connectsTo: [] },
-        { id: 'armor', tier: 1, icon: 'icons/armor.webp', row:8, col: 1, rank: 0, type: 'hp', label: 'Armor', connectsTo: [], effects: { xp: -3, hp: +1 } },
-         { id: 'cover', tier: 1, icon: 'icons/cover.webp', row:7, col: 2, rank: 0, type: 'hp', label: 'Cover', connectsTo: [] },
-        { id: 'aim', tier: 1, icon: 'icons/aim.png', row:8, col: 2, rank: 0, type: 'hp', label: 'Aim', connectsTo: [], description: 'This skill represents a character’s ability to strike a target accurately and reliably, such as with a blaster bolt.' },
-         { id: 'explosives', tier: 1, icon: 'icons/explosives.webp', row:7, col: 3, rank: 0, type: 'hp', label: 'Explosives', connectsTo: ['demolition'] },
-        { id: 'jetpack', tier: 1, icon: 'icons/jetpack.webp', row:8, col: 3, rank: 0, type: 'hp', label: 'Jetpack', connectsTo: [] },
-         { id: 'blades', tier: 1, icon: 'icons/blades.webp', row:7, col: 4, rank: 0, type: 'hp', label: 'Blades', connectsTo: [] },
+        { id: 'blasters', tier: 1, icon: 'icons/blasters.webp', row:7, col: 1, rank: 0, type: 'hp', label: 'Blasters', connectsTo: [], description: 'This skill represents a character’s ability to accurately and efficiently handle blasters, such as blaster pistols, rifles and sniper rifles.'},
+        { id: 'armor', tier: 1, icon: 'icons/armor.webp', row:8, col: 1, rank: 0, type: 'hp', label: 'Armor', connectsTo: [], effects: { xp: -3, hp: +1 } , description: 'This skill represents a character’s ability to comfortably and effectively utilise armour to both move and execute complex actions. It provides an additional layer of protection.'},
+         { id: 'cover', tier: 1, icon: 'icons/cover.webp', row:7, col: 2, rank: 0, type: 'hp', label: 'Cover', connectsTo: [] , description: 'This skill represents a character’s ability to safely seek and use cover in combat scenarios, such as discerning suitable cover, and determining when to effectively counter-fire.'},
+        { id: 'aim', tier: 1, icon: 'icons/aim.png', row:8, col: 2, rank: 0, type: 'hp', label: 'Aim', connectsTo: [], description: 'This skill represents a character’s innate or trained ability to precisely calculate and execute the trajectory for any object they project. Whether it’s flawlessly throwing a grappling hook to latch onto a distant ledge, accurately hurling a projectile to strike a specific point, or any other action demanding the precise understanding of distance.' },
+         { id: 'explosives', tier: 1, icon: 'icons/explosives.webp', row:7, col: 3, rank: 0, type: 'hp', label: 'Explosives', connectsTo: ['demolition'], description: 'This skill represents a character’s ability to safely and effectively handle explosives for immediate use, such as grenades, fixed explosives, and thermal detonators against enemies or opponents.'},
+        { id: 'jetpack', tier: 1, icon: 'icons/jetpack.webp', row:8, col: 3, rank: 0, type: 'hp', label: 'Jetpack', connectsTo: [] , description: 'This skill represents a character’s ability to safely and reliably utilise a jetpack, such as to traverse steep terrain, or gain an aerial advantage over targets.'},
+         { id: 'blades', tier: 1, icon: 'icons/blades.webp', row:7, col: 4, rank: 0, type: 'hp', label: 'Blades', connectsTo: [], description: 'This skill represents a character’s ability to accurately and efficiently handle bladed objects such as knives, vibroswords and electroblades.' },
         { id: 'cq_combat', tier: 1, icon: 'icons/cq_combat.png', row:8, col: 4, rank: 0, type: 'hp', label: 'CQ Combat', connectsTo: [], description: 'This skill represents a character’s ability to fight in close quarters - utilising melee weaponry, martial technique and proprioception to land strikes and defend themselves.' },
-        { id: 'stealth', tier: 1, icon: 'icons/stealth.png', row:7, col: 5, rank: 0, type: 'hp', label: 'Stealth', connectsTo: ['infiltration'] },
+        { id: 'stealth', tier: 1, icon: 'icons/stealth.png', row:7, col: 5, rank: 0, type: 'hp', label: 'Stealth', connectsTo: ['infiltration'] , description: 'This skill represents a character’s ability to evade detection through the minimisation of their physical presence by various means, such as the use of stealth generators and the strict use of silence.'},
         { id: 'recon', tier: 1, icon: 'icons/recon.webp', row:8, col: 5, rank: 0, type: 'hp', label: 'Recon', connectsTo: [] , description: 'This skill represents a character’s ability to gather primary sources of information to inform tactical and mission command, such as through the use of probe droids or scouting. '},
          { id: 'piloting', tier: 1, icon: 'icons/piloting.webp', row:7, col: 6, rank: 0, type: 'hp', label: 'Piloting', connectsTo: ['gunnery'], description: 'This skill represents a character’s ability to operate heavy machinery, such as starships effectively and reliably. ' },
         { id: 'navigation', tier: 1, icon: 'icons/navigation.webp', row:8, col: 6, rank: 0, type: 'hp', label: 'Navigation', connectsTo: [], description: 'This skill represents a character’s ability to orient themselves in a physical space through various means, such as the use of maps, landscape, or other readouts. ' },
@@ -119,7 +119,7 @@ const state = {
          { id: 'first_aid', tier: 1, icon: 'icons/first_aid.webp', row:7, col: 8, rank: 0, type: 'hp', label: 'First Aid', connectsTo: ['stabilizing_care'], description: 'This skill represents a character’s ability to perform the most basic checks and actions aimed at prolonging a character’s life in a critical situation, such as checking airways, the recovery position, the application and use of a tourniquet or medpack.' },
         { id: 'diagnostics', tier: 1, icon: 'icons/diagnostics.webp', row:8, col: 8, rank: 0, type: 'hp', label: 'Diagnostics', connectsTo: ['first_aid'], description: 'This skill represents a character’s ability to diagnose physical and mental ailments, either through the use of equipment such as bioscanners, or through inspection and professional knowledge.' },
         { id: 'biology', tier: 1, icon: 'icons/biology.webp', row:7, col: 9, rank: 0, type: 'hp', label: 'Biology', connectsTo: ['chemistry'], description: 'This skill represents a character’s ability to understand the function of living things, including topics such as genetics and microscopic study. Medical knowledge is excluded.'  },
-       { id: 'cybernetics', tier: 1, icon: 'icons/cybernetics.png', row:8, rank: 0, col: 9, type: 'normal', label: 'Cybernetics', connectsTo: [], description: 'This skill represents a character’s ability to understand, identify and maintain cybernetic augmentations. It also covers the effective use of more complicated cybernetic functions.' },
+       { id: 'cybernetics', tier: 1, icon: 'icons/cybernetics.png', row:8, rank: 0, col: 9, type: 'normal', label: 'Cybernetics', connectsTo: [], description: 'This skill represents a character’s ability to understand, identify, and maintain cybernetic augmentations. It also covers the effective use of more complicated cybernetic functions.' },
       
         { id: 'culture', tier: 1, icon: 'icons/culture.webp', row:8, col: 10, rank: 0, type: 'hp', label: 'Culture', connectsTo: ['archeology', 'diplomacy'], description: ' aka Linguistics & History This skill represents a character’s ability to understand the norms and values of various cultures (inc. their own) as well as the character’s pre-existing knowledge of such. This can include: religious beliefs, cultural taboos, societal organisation and prejudices. The skill includes knowledge in History and Linguistics as well.' },
          { id: 'archeology', tier: 1, icon: 'icons/archeology.webp', row:7, col: 10, rank: 0, type: 'hp', label: 'Archeology', connectsTo: [], description: 'This skill represents a character’s ability to understand, remember and apply information about ancient civilisations. Such as by navigating tombs or identifying artefacts. ' },
@@ -128,7 +128,7 @@ const state = {
         
         { id: 'interrogation', tier: 1, icon: 'icons/interrogation.webp', row:8,  col: 12, rank: 0, type: 'normal', label: 'Interrogation', connectsTo: ['intimidation'], description: 'This skill represents a character’s ability to get information out of an unwilling subject through various means, such as chemical influences, threats or torture.' },
           { id: 'intimidation', tier: 1, icon: 'icons/intimidation.webp', rank: 0, row: 7, col: 12,  type: 'rb', label: 'Intimidation', connectsTo: ['manipulation'], description: 'This skill represents a character’s ability to frighten or otherwise coerce others via demeanor, threat, or deliberate actions. ' },
-            { id: 'swords', tier: 1, icon: 'icons/swords.webp', row:7,  col: 14, rank: 0, type: 'normal', label: 'Swords', connectsTo: ['offense', 'defense', 'maneuver'] },
+            { id: 'swords', tier: 1, icon: 'icons/swords.webp', row:7,  col: 13, rank: 0, type: 'normal', label: 'Swords', connectsTo: ['offense', 'defense', 'maneuver'] },
           { id: 'mechu_deru', tier: 1, icon: 'icons/mechu_deru.webp', rank: 0, row: 8, col: 14,  type: 'rb', label: 'Mechu-Deru', connectsTo: [] },
            { id: 'force_pull', tier: 1, icon: 'icons/force_pull.png', row:7,  col: 15, rank: 0, type: 'normal', label: 'Force Pull', connectsTo: [] },
           { id: 'force_push', tier: 1, icon: 'icons/force_push.webp', rank: 0, row: 8, col: 15,  type: 'rb', label: 'Force Push', connectsTo: ['force_whirlwind'] },
@@ -802,390 +802,244 @@ if (!canUpgrade && skill.rank === 0) {
         updateSkillLabel(node._skillLabel, skill);
     }
 }
+function getSkillBox(skillObj) {
 
+    const el = document.querySelector(
+        `[data-skill-id="${skillObj.id}"]`
+    );
+
+    if (!el) return null;
+
+    const rect = el.getBoundingClientRect();
+
+    return {
+        left:
+            rect.left -
+            workspaceRect.left +
+            elements.workspace.scrollLeft,
+
+        right:
+            rect.right -
+            workspaceRect.left +
+            elements.workspace.scrollLeft,
+
+        top:
+            rect.top -
+            workspaceRect.top +
+            elements.workspace.scrollTop,
+
+        bottom:
+            rect.bottom -
+            workspaceRect.top +
+            elements.workspace.scrollTop,
+
+        centerX:
+            rect.left +
+            rect.width / 2 -
+            workspaceRect.left +
+            elements.workspace.scrollLeft,
+
+        centerY:
+            rect.top +
+            rect.height / 2 -
+            workspaceRect.top +
+            elements.workspace.scrollTop
+    };
+}
 // Draw connections
 function drawConnections() {
-
     const svg = elements.connectionsSvg;
     svg.innerHTML = '';
 
-    const workspaceRect = elements.workspace.getBoundingClientRect();
+    const ws = elements.workspace;
+    const wsRect = ws.getBoundingClientRect();
+
+    // --- helpers -----------------------------------------------------------
+
+    /** Workspace-relative bounding box for a skill element */
+    function getBox(skillId) {
+        const el = document.querySelector(`[data-skill-id="${skillId}"]`);
+        if (!el) return null;
+        const r = el.getBoundingClientRect();
+        const scrollLeft = ws.scrollLeft, scrollTop = ws.scrollTop;
+        return {
+            top:    r.top    - wsRect.top  + scrollTop,
+            bottom: r.bottom - wsRect.top  + scrollTop,
+            left:   r.left   - wsRect.left + scrollLeft,
+            right:  r.right  - wsRect.left + scrollLeft,
+            cx:     r.left + r.width  / 2 - wsRect.left + scrollLeft,
+            cy:     r.top  + r.height / 2 - wsRect.top  + scrollTop,
+        };
+    }
+
+    /**
+     * Given two grid rows, return the Y coordinate of the midpoint of the
+     * visual gap between them (average of the bottom of the upper row's
+     * tallest element and the top of the lower row's shortest element).
+     * Falls back to a simple geometric midpoint if no elements are found.
+     */
+    function gapY(upperRow, lowerRow) {
+        const upper = state.skills.filter(s => s.row === upperRow);
+        const lower = state.skills.filter(s => s.row === lowerRow);
+
+        const bottoms = upper.map(s => getBox(s.id)?.bottom).filter(Boolean);
+        const tops    = lower.map(s => getBox(s.id)?.top).filter(Boolean);
+
+        if (!bottoms.length || !tops.length) return null;
+
+        return (Math.max(...bottoms) + Math.min(...tops)) / 2;
+    }
+
+    /**
+     * Given two grid cols, return the X coordinate of the midpoint of the
+     * visual gap between them.
+     */
+    function gapX(leftCol, rightCol) {
+        const left  = state.skills.filter(s => s.col === leftCol);
+        const right = state.skills.filter(s => s.col === rightCol);
+
+        const rights = left.map(s  => getBox(s.id)?.right).filter(Boolean);
+        const lefts  = right.map(s => getBox(s.id)?.left).filter(Boolean);
+
+        if (!rights.length || !lefts.length) return null;
+
+        return (Math.max(...rights) + Math.min(...lefts)) / 2;
+    }
+
+    // -----------------------------------------------------------------------
 
     state.skills.forEach(skill => {
-
         if (!skill.connectsTo?.length) return;
-
-        const sourceEl = document.querySelector(
-            `[data-skill-id="${skill.id}"]`
-        );
-
-        if (!sourceEl) return;
+        const sBox = getBox(skill.id);
+        if (!sBox) return;
 
         skill.connectsTo.forEach(targetId => {
+            if (!targetId) return;
 
-            const targetEl = document.querySelector(
-                `[data-skill-id="${targetId}"]`
-            );
-
-            if (!targetEl) return;
-
-            const targetSkill = state.skills.find(
-                s => s.id === targetId
-            );
-
+            const targetSkill = state.skills.find(s => s.id === targetId);
             if (!targetSkill) return;
+            const tBox = getBox(targetId);
+            if (!tBox) return;
 
-            const sRect = sourceEl.getBoundingClientRect();
-            const tRect = targetEl.getBoundingClientRect();
+            const rowDiff = targetSkill.row - skill.row;   // + = target is lower
+            const colDiff = targetSkill.col - skill.col;   // + = target is to the right
 
-            // REAL center positions
-            const sx = sRect.left + sRect.width / 2
-                - workspaceRect.left
-                + elements.workspace.scrollLeft;
+            let d = '';
 
-            const sy = sRect.top + sRect.height / 2
-                - workspaceRect.top
-                + elements.workspace.scrollTop;
+            // ── SAME COLUMN ────────────────────────────────────────────────
+            if (colDiff === 0) {
+                // Exit bottom or top toward the target
+                const startY = rowDiff > 0 ? sBox.bottom : sBox.top;
+                const endY   = rowDiff > 0 ? tBox.top    : tBox.bottom;
+                const x      = sBox.cx;
 
-            const tx = tRect.left + tRect.width / 2
-                - workspaceRect.left
-                + elements.workspace.scrollLeft;
+                // Are there any skills on this column between the two rows?
+                const minRow = Math.min(skill.row, targetSkill.row);
+                const maxRow = Math.max(skill.row, targetSkill.row);
+                const blockers = state.skills.filter(
+                    s => s.id !== skill.id && s.id !== targetId &&
+                         s.col === skill.col && s.row > minRow && s.row < maxRow
+                );
 
-            const ty = tRect.top + tRect.height / 2
-                - workspaceRect.top
-                + elements.workspace.scrollTop;
-
-            const rowDiff = targetSkill.row - skill.row;
-            const colDiff = targetSkill.col - skill.col;
-
-            let path = '';
-
-            // Calculate actual column width in pixels
-            let colWidth = 60; // fallback
-            const refSkill = state.skills.find(s => s.col === skill.col + 1 && s.row === skill.row);
-            if (!refSkill) {
-                const anyRef = state.skills.find(s => s.col === skill.col + 1);
-                if (anyRef) {
-                    const refEl = document.querySelector(`[data-skill-id="${anyRef.id}"]`);
-                    if (refEl) {
-                        const refRect = refEl.getBoundingClientRect();
-                        const refX = refRect.left + refRect.width / 2 - workspaceRect.left + elements.workspace.scrollLeft;
-                        colWidth = Math.abs(refX - sx);
-                    }
-                }
-            } else {
-                const refEl = document.querySelector(`[data-skill-id="${refSkill.id}"]`);
-                if (refEl) {
-                    const refRect = refEl.getBoundingClientRect();
-                    const refX = refRect.left + refRect.width / 2 - workspaceRect.left + elements.workspace.scrollLeft;
-                    colWidth = Math.abs(refX - sx);
+                if (blockers.length) {
+                    // Route around: use the gap to the right of this column
+                    const rightCol = skill.col + 1;
+                    const laneX    = gapX(skill.col, rightCol) ?? sBox.right + 20;
+                    d = `M ${x} ${startY} L ${laneX} ${startY} L ${laneX} ${endY} L ${x} ${endY}`;
+                } else {
+                    d = `M ${x} ${startY} L ${x} ${endY}`;
                 }
             }
 
-            if (colDiff !== 0) {
-                colWidth = Math.abs(tx - sx) / Math.abs(colDiff);
+            // ── SAME ROW ───────────────────────────────────────────────────
+            else if (rowDiff === 0) {
+                const startX = colDiff > 0 ? sBox.right : sBox.left;
+                const endX   = colDiff > 0 ? tBox.left  : tBox.right;
+                const y      = sBox.cy;
+
+                const minCol = Math.min(skill.col, targetSkill.col);
+                const maxCol = Math.max(skill.col, targetSkill.col);
+                const blockers = state.skills.filter(
+                    s => s.id !== skill.id && s.id !== targetId &&
+                         s.row === skill.row && s.col > minCol && s.col < maxCol
+                );
+
+                if (blockers.length) {
+                    // Route around: use gap above this row (or below if none)
+                    const upperRow = skill.row - 1;
+                    const lowerRow = skill.row + 1;
+                    const laneYUp  = gapY(upperRow, skill.row);
+                    const laneYDn  = gapY(skill.row, lowerRow);
+                    const laneY    = laneYUp ?? laneYDn ?? sBox.top - 20;
+                    d = `M ${startX} ${y} L ${startX} ${laneY} L ${endX} ${laneY} L ${endX} ${y}`;
+                } else {
+                    d = `M ${startX} ${y} L ${endX} ${y}`;
+                }
             }
 
-            // Helper: get edge positions for a skill in workspace coords
-            const getSkillEdges = (skillObj) => {
-                const el = document.querySelector(`[data-skill-id="${skillObj.id}"]`);
-                if (!el) return null;
-                const rect = el.getBoundingClientRect();
-                return {
-                    top: rect.top - workspaceRect.top + elements.workspace.scrollTop,
-                    bottom: rect.bottom - workspaceRect.top + elements.workspace.scrollTop,
-                    left: rect.left - workspaceRect.left + elements.workspace.scrollLeft,
-                    right: rect.right - workspaceRect.left + elements.workspace.scrollLeft,
-                    centerX: rect.left + rect.width / 2 - workspaceRect.left + elements.workspace.scrollLeft,
-                    centerY: rect.top + rect.height / 2 - workspaceRect.top + elements.workspace.scrollTop
-                };
-            };
-
-            const sourceEdges = getSkillEdges(skill);
-            const targetEdges = getSkillEdges(targetSkill);
-
-            if (!sourceEdges || !targetEdges) return;
-
-   
-// SAME COLUMN
-// -----------------------------------
-
-// Replace the entire SAME COLUMN section with this:
-
-if (colDiff === 0) {
-
-    const startY = rowDiff > 0 ? sourceEdges.bottom : sourceEdges.top;
-    const endY = rowDiff > 0 ? targetEdges.top : targetEdges.bottom;
-
-    const minRow = Math.min(skill.row, targetSkill.row);
-    const maxRow = Math.max(skill.row, targetSkill.row);
-
-    // Find ALL skills in this column between source and target
-    const blockingSkills = state.skills.filter(s =>
-        s.id !== skill.id &&
-        s.id !== targetId &&
-        s.col === skill.col &&
-        s.row > minRow &&
-        s.row < maxRow
-    );
-
-    if (blockingSkills.length > 0) {
-        // Find gap on either side
-        let laneX;
-        
-        // Try right side first
-        const rightSkills = state.skills.filter(s => s.col === skill.col + 1 && s.row >= minRow && s.row <= maxRow);
-        const leftSkills = state.skills.filter(s => s.col === skill.col - 1 && s.row >= minRow && s.row <= maxRow);
-        
-        // Check if right side has space
-        if (rightSkills.length === 0) {
-            // No skills on right - use fixed offset
-            laneX = sourceEdges.right + 30;
-        } else {
-            // Find the closest right skill to calculate gap center
-            const rightEl = document.querySelector(`[data-skill-id="${rightSkills[0].id}"]`);
-            if (rightEl) {
-                const rightRect = rightEl.getBoundingClientRect();
-                const rightLeft = rightRect.left - workspaceRect.left + elements.workspace.scrollLeft;
-                laneX = (sourceEdges.right + rightLeft) / 2;
-            } else {
-                laneX = sourceEdges.right + 30;
-            }
-        }
-
-        // Use direct top/bottom exit
-        path = `
-            M ${sourceEdges.centerX} ${startY}
-            L ${laneX} ${startY}
-            L ${laneX} ${endY}
-            L ${targetEdges.centerX} ${endY}
-        `;
-    } else {
-        path = `
-            M ${sourceEdges.centerX} ${startY}
-            L ${targetEdges.centerX} ${endY}
-        `;
-    }
-}
-
-            // -----------------------------------
-            // SAME ROW
-            // -----------------------------------
-
-           else if (rowDiff === 0) {
-
-    const startX = colDiff > 0 ? sourceEdges.right : sourceEdges.left;
-    const endX = colDiff > 0 ? targetEdges.left : targetEdges.right;
-
-    const minCol = Math.min(skill.col, targetSkill.col);
-    const maxCol = Math.max(skill.col, targetSkill.col);
-
-    const blockingSkills = state.skills.filter(s =>
-        s.id !== skill.id &&
-        s.id !== targetId &&
-        s.row === skill.row &&
-        s.col > minCol &&
-        s.col < maxCol
-    );
-
-    if (blockingSkills.length > 0) {
-        const blockerEdges = blockingSkills.map(s => getSkillEdges(s)).filter(e => e !== null);
-        const highestBlockerTop = Math.min(...blockerEdges.map(e => e.top));
-        
-        // Find the row above to determine the gap center
-        const rowAbove = skill.row - 1;
-        const skillsAbove = state.skills.filter(s => s.row === rowAbove && s.col >= minCol && s.col <= maxCol);
-        
-        let routeY;
-        if (skillsAbove.length > 0) {
-            // Find a skill in the row above to determine the actual row spacing
-            const aboveEl = document.querySelector(`[data-skill-id="${skillsAbove[0].id}"]`);
-            if (aboveEl) {
-                const aboveRect = aboveEl.getBoundingClientRect();
-                const aboveBottom = aboveRect.bottom - workspaceRect.top + elements.workspace.scrollTop;
-                // Center between the row above's bottom and the blockers' top
-                routeY = (aboveBottom + highestBlockerTop) / 2;
-            } else {
-                routeY = highestBlockerTop - 20;
-            }
-        } else {
-            // No skills above - use the blocker top minus a reasonable gap
-            routeY = highestBlockerTop - 20;
-        }
-
-        path = `
-            M ${startX} ${sy}
-            L ${startX} ${routeY}
-            L ${endX} ${routeY}
-            L ${endX} ${sy}
-        `;
-    } else {
-        path = `
-            M ${startX} ${sy}
-            L ${endX} ${ty}
-        `;
-    }
-}
-
-
-  // -----------------------------------
-// DIAGONAL
-// -----------------------------------
-
+            // ── DIAGONAL ───────────────────────────────────────────────────
+// ── DIAGONAL ───────────────────────────────────────────────────
 else {
 
-    const startX = colDiff > 0 ? sourceEdges.right : sourceEdges.left;
-    const endX = colDiff > 0 ? targetEdges.left : targetEdges.right;
-    const startY = sy;
-    const endY = ty;
+    const startX = colDiff > 0 ? sBox.right : sBox.left;
+    const endX   = colDiff > 0 ? tBox.left  : tBox.right;
 
-    const minRow = Math.min(skill.row, targetSkill.row);
-    const maxRow = Math.max(skill.row, targetSkill.row);
-    const minCol = Math.min(skill.col, targetSkill.col);
-    const maxCol = Math.max(skill.col, targetSkill.col);
+    // lane beside source
+    const sourceAdjCol = skill.col + Math.sign(colDiff);
 
-    const blockingSkills = state.skills.filter(s =>
-        s.id !== skill.id &&
-        s.id !== targetId &&
-        s.row >= minRow &&
-        s.row <= maxRow &&
-        s.col > minCol &&
-        s.col < maxCol
-    );
+    const sourceLaneX = colDiff > 0
+        ? (gapX(skill.col, sourceAdjCol) ?? sBox.right + 20)
+        : (gapX(sourceAdjCol, skill.col) ?? sBox.left - 20);
 
-    let routeY;
-    let laneX;
+    // lane beside target
+    const targetAdjCol = targetSkill.col - Math.sign(colDiff);
 
-    // Calculate horizontal lane position - CENTER of the gap between columns
-    if (colDiff > 0) {
-        // Find the actual gap between source column and next column
-        const nextColSkills = state.skills.filter(s => s.col === skill.col + 1);
-        if (nextColSkills.length > 0) {
-            const nextEl = document.querySelector(`[data-skill-id="${nextColSkills[0].id}"]`);
-            if (nextEl) {
-                const nextRect = nextEl.getBoundingClientRect();
-                const nextCenterX = nextRect.left + nextRect.width / 2 - workspaceRect.left + elements.workspace.scrollLeft;
-                laneX = (sx + nextCenterX) / 2;
-            } else {
-                laneX = sx + colWidth * 0.5;
-            }
-        } else {
-            laneX = sx + colWidth * 0.5;
-        }
-    } else {
-        const prevColSkills = state.skills.filter(s => s.col === skill.col - 1);
-        if (prevColSkills.length > 0) {
-            const prevEl = document.querySelector(`[data-skill-id="${prevColSkills[0].id}"]`);
-            if (prevEl) {
-                const prevRect = prevEl.getBoundingClientRect();
-                const prevCenterX = prevRect.left + prevRect.width / 2 - workspaceRect.left + elements.workspace.scrollLeft;
-                laneX = (sx + prevCenterX) / 2;
-            } else {
-                laneX = sx - colWidth * 0.5;
-            }
-        } else {
-            laneX = sx - colWidth * 0.5;
-        }
-    }
+    const targetLaneX = colDiff > 0
+        ? (gapX(targetAdjCol, targetSkill.col) ?? tBox.left - 20)
+        : (gapX(targetSkill.col, targetAdjCol) ?? tBox.right + 20);
 
-    if (blockingSkills.length > 0) {
-        const blockerEdges = blockingSkills.map(s => getSkillEdges(s)).filter(e => e !== null);
+    // safe row gap
+    const adjRow = skill.row + Math.sign(rowDiff);
 
-        if (blockerEdges.length > 0) {
-            const highestBlockerTop = Math.min(...blockerEdges.map(e => e.top));
-            const lowestBlockerBottom = Math.max(...blockerEdges.map(e => e.bottom));
+    const laneY = rowDiff > 0
+        ? (gapY(skill.row, adjRow) ?? sBox.bottom + 20)
+        : (gapY(adjRow, skill.row) ?? sBox.top - 20);
 
-            const allBlockersAboveSource = blockingSkills.every(s => s.row < skill.row);
-            const allBlockersBelowTarget = blockingSkills.every(s => s.row > targetSkill.row);
+    d = [
+        // leave source
+        `M ${startX} ${sBox.cy}`,
 
-            if (allBlockersAboveSource && allBlockersBelowTarget) {
-                // Blockers are between source and target - center between them
-                routeY = (highestBlockerTop + lowestBlockerBottom) / 2;
-            } else if (skill.row > targetSkill.row) {
-                // Source is below target
-                if (blockingSkills.some(s => s.row >= targetSkill.row)) {
-                    // Blockers at or above target - route above, centering between target and blockers
-                    const upperBound = Math.min(targetEdges.top, highestBlockerTop);
-                    // Find what's above to center properly
-                    const targetRowSkills = state.skills.filter(s => s.row === targetSkill.row && s.col > minCol && s.col < maxCol);
-                    if (targetRowSkills.length > 0) {
-                        const targetRowTop = Math.min(...targetRowSkills.map(s => {
-                            const e = getSkillEdges(s);
-                            return e ? e.top : Infinity;
-                        }).filter(v => v !== Infinity));
-                        routeY = targetRowTop - 20; // 20px above the target row
-                    } else {
-                        routeY = upperBound - 20;
-                    }
-                } else {
-                    routeY = (targetEdges.bottom + highestBlockerTop) / 2;
-                }
-            } else {
-                // Source is above target
-                if (blockingSkills.some(s => s.row <= targetSkill.row)) {
-                    const lowerBound = Math.max(targetEdges.bottom, lowestBlockerBottom);
-                    const targetRowSkills = state.skills.filter(s => s.row === targetSkill.row && s.col > minCol && s.col < maxCol);
-                    if (targetRowSkills.length > 0) {
-                        const targetRowBottom = Math.max(...targetRowSkills.map(s => {
-                            const e = getSkillEdges(s);
-                            return e ? e.bottom : -Infinity;
-                        }).filter(v => v !== -Infinity));
-                        routeY = targetRowBottom + 20;
-                    } else {
-                        routeY = lowerBound + 20;
-                    }
-                } else {
-                    routeY = (lowestBlockerBottom + targetEdges.top) / 2;
-                }
-            }
-        } else {
-            routeY = (startY + endY) / 2;
-        }
-    } else {
-        routeY = (startY + endY) / 2;
-    }
+        // move into source column lane
+        `L ${sourceLaneX} ${sBox.cy}`,
 
-    path = `
-        M ${startX} ${startY}
-        L ${laneX} ${startY}
-        L ${laneX} ${routeY}
-        L ${endX} ${routeY}
-        L ${endX} ${endY}
-    `;
+        // travel vertically in safe lane
+        `L ${sourceLaneX} ${laneY}`,
+
+        // cross horizontally in safe row gap
+        `L ${targetLaneX} ${laneY}`,
+
+        // rise/drop beside target
+        `L ${targetLaneX} ${tBox.cy}`,
+
+        // enter target edge center
+        `L ${endX} ${tBox.cy}`,
+    ].join(' ');
 }
 
-            const pathEl = document.createElementNS(
-                'http://www.w3.org/2000/svg',
-                'path'
-            );
-
-            pathEl.setAttribute('d', path);
+            // ── Draw the path ───────────────────────────────────────────────
+            const active = skill.rank > 0 && targetSkill.rank > 0;
+            const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            pathEl.setAttribute('d', d);
             pathEl.setAttribute('fill', 'none');
-            pathEl.setAttribute(
-                'stroke',
-                skill.rank > 0 && targetSkill.rank > 0
-                    ? '#ffd700'
-                    : 'rgba(255,215,0,0.4)'
-            );
-            pathEl.setAttribute(
-                'stroke-width',
-                skill.rank > 0 && targetSkill.rank > 0 ? '2.5' : '2'
-            );
+            pathEl.setAttribute('stroke', active ? '#ffd700' : 'rgba(255,215,0,0.4)');
+            pathEl.setAttribute('stroke-width', active ? '2.5' : '2');
             pathEl.setAttribute('stroke-linejoin', 'round');
             pathEl.setAttribute('stroke-linecap', 'round');
-            pathEl.setAttribute(
-                'stroke-dasharray',
-                skill.rank > 0 && targetSkill.rank > 0 ? 'none' : '5 4'
-            );
-
-            if (skill.rank > 0 && targetSkill.rank > 0) {
-                pathEl.setAttribute('filter', 'drop-shadow(0 0 4px #ffd700)');
-            }
-        pathEl.setAttribute('data-connection-source', skill.id);
-        pathEl.setAttribute('data-connection-target', targetId);
-        pathEl.classList.add('connection-path');
-
-        svg.appendChild(pathEl);
+            pathEl.setAttribute('stroke-dasharray', active ? 'none' : '5 4');
+            if (active) pathEl.setAttribute('filter', 'drop-shadow(0 0 4px #ffd700)');
+            pathEl.setAttribute('data-connection-source', skill.id);
+            pathEl.setAttribute('data-connection-target', targetId);
+            pathEl.classList.add('connection-path');
             svg.appendChild(pathEl);
         });
     });

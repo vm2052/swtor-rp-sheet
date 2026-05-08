@@ -3,16 +3,20 @@
    ============================================ */
 
 :root {
-    --sw-blue: #00d4ff;
+        /* Core hologram palette */
+    --holo-cyan: #7df9ff;
+    --holo-blue: #4cc9f0;
+    --holo-violet: #b892ff;
+    --sw-blue: #4cc9f0;
     --sw-green: #3fff00;
     --sw-red: #ff3c3c;
     --sw-gold: #ffd700;
-    --sw-purple: #bf00ff;
+    --sw-purple: #b892ff;
     --sw-white: #ffffff;
     
-    --bg-primary: #06080c;
-    --bg-secondary: #0d1117;
-    --bg-tertiary: #161b22;
+    --bg-primary: #05070a;
+    --bg-secondary: rgba(10, 14, 18, 0.75);
+    --bg-glass: rgba(255, 255, 255, 0.03);
     
     --tier-1-color: #8b9dc3;
     --tier-2-color: #4a90e2;
@@ -22,6 +26,7 @@
     
     --skill-size: 1.2cm;
     --sidebar-width: 280px;
+    
 }
 
 * {
