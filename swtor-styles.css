@@ -71,6 +71,8 @@ body, html {
     overflow-x: auto;
     overflow-y: auto;
 }
+ 
+ 
 body::after {
     content: "";
     position: fixed;
@@ -90,7 +92,7 @@ body::after {
                 radial-gradient(ellipse at 70% 80%, rgba(170, 68, 255, 0.05), transparent 60%),
                 var(--bg-deep);
 }
-
+ 
 /* ============ TOP UI BAR ============ */
 .top-ui {
     background: rgba(0, 20, 40, 0.7);
@@ -320,12 +322,11 @@ button:hover {
 }
 
 .tier-divider {
- 
     position: absolute;
-     left: 0;
+    left: 0;
     display: flex;
     align-items: center;
-     border-top: 1px dashed rgba(255,255,255,0.3);
+    border-top: 1px dashed rgba(255,255,255,0.3);
     width: 100%;
 }
 .tier-label {
@@ -456,11 +457,16 @@ button:hover {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
     right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+                transparent 0%,
+                rgba(255, 0, 0, 0.03) 30%,
+                rgba(255, 0, 0, 0.08) 60%,
+                rgba(200, 0, 0, 0.12) 100%);
     pointer-events: none;
+    z-index: 1;
 }
 
 /* SVG Connections Layer */
@@ -918,6 +924,15 @@ button:hover {
     width: 100%;
     pointer-events: none;
 }
+.tier-xp {
+    position: absolute;
+    right: 6px; /* right side of sidebar */
+    transform: translateY(-50%);
+    font-size: 10px;
+    color: var(--holo-cyan);
+    white-space: nowrap;
+    text-shadow: 0 0 6px var(--holo-cyan);
+}
 .xp-tier-marker {
     position: absolute;
     left: 50%;
@@ -1102,9 +1117,15 @@ button:hover {
     border-radius: 8px;
     padding: 12px;
     color: white;
+    
     box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
     backdrop-filter: blur(15px);
     z-index: 9999;
+}
+.skill-cell:last-child .skill-tooltip,
+.skill-node:last-child .skill-tooltip {
+    left: auto;
+    right: calc(var(--skill-size) + 15px);
 }
 .skill-tooltip img {
     width: 40px;
@@ -1129,7 +1150,11 @@ button:hover {
     opacity: 0.9;
     text-align: center;
 }
-
+.skill-tooltip .gain {
+    font-size: 12px;
+    opacity: 0.9;
+    text-align: center;
+}
 .hidden {
     display: none;
 }
