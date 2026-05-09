@@ -62,7 +62,7 @@ const state = {
       { id: 'false_ls_aura', tier: 3, icon: 'icons/false_ls_aura.webp', rank: 0, type: 'rb', row: 3, col: 16,  label: 'False LS Aura', connectsTo: ['force_cloak'] , description: 'False Light Side Aura allows to cover a Sith’s dark side aura with one of light, usually in order to trick others. The user can only conjure an aura for their skill level: Apprentice-Padawan, Sith-Knight, Lord-Master. Anyone who is above their level may detect the user.'},
         // TIER 2 - Advanced Training
       
-        { id: 'shield', tier: 2, icon: 'icons/shield.webp', rank: 0, type: 'rb', row: 5, col: 0,  label: 'Shield', connectsTo: [], effects: { xp: -3, hp: +1 } , description:'This skill represents a character’s ability to effectively and efficiently protect and cover themselves or others from attack with a mobile solution such as a shield generator, or physical shield eg. riot shields, and improvised shields. '},
+        { id: 'shield', tier: 2, icon: 'icons/shield.webp', rank: 0, type: 'rb', row: 5, col: 0,  label: 'Shield', connectsTo: [], effects: { xp: -4, hp: +1 } , description:'This skill represents a character’s ability to effectively and efficiently protect and cover themselves or others from attack with a mobile solution such as a shield generator, or physical shield eg. riot shields, and improvised shields. '},
         { id: 'darts', tier: 2, icon: 'icons/darts.webp', rank: 0, type: 'rb', row: 5, col: 1,  label: 'Darts', connectsTo: [], description: 'This skill represents a character’s ability to accurately use darts of various types against others or avoid them. ' },
         { id: 'initiative', tier: 2, icon: 'icons/initiative.png', rank: 0, type: 'rb', row: 5, col: 2,  label: 'Initiative', connectsTo: ['tactics'] , description: 'This skill represents a character’s ability to both react quickly in response to the surrounding environment and situation. It also provides a bonus when determining the order of actions of different characters.'},
         { id: 'demolition', tier: 2, icon: 'icons/demolition.webp', rank: 0, type: 'rb', row: 5, col: 3,  label: 'Demolition', connectsTo: [] , description: 'This skill represents a character’s ability to safely and effectively handle explosives, such as fixed explosives against infrastructure or large constructs. Demolition also covers the use of laid traps against enemy forces.'},
@@ -188,7 +188,7 @@ function init() {
 function getMaxRank(skill) {
     if (skill.id === 'force_maelstrom') return 5;
     if(!skill.effects) return 5;
-    if (skill.effects.hp) return 3;
+    if (skill.effects.hp) return 4;
     if (skill.effects.rb) return 4;
     return 5;
 }
@@ -1375,7 +1375,7 @@ function updateStats() {
 
         const rank = skill.rank || 0;
 
-        if (skill.effects.hp && skill.rank >= 3) {
+        if (skill.effects.hp && skill.rank >= 4) {
             hpTotal += 1;
         }
 
